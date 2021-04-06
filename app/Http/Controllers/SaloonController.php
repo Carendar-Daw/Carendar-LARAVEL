@@ -46,7 +46,14 @@ class SaloonController extends Controller
      */
     public function show(Saloon $saloon)
     {
-        //
+        $Saloon= Saloon::all();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'saloons' => $Saloon,
+            ]
+        ]);
     }
 
     /**
