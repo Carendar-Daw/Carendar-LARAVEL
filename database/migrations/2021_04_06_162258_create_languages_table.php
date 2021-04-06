@@ -14,7 +14,9 @@ class CreateLanguagesTable extends Migration
     public function up()
     {
         Schema::create('languages', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('sal_id');
+            $table->foreign('sal_id')->references('sal_id')->on('saloons');
+            $table->string('lan_preference', 2); 
             $table->timestamps();
         });
     }

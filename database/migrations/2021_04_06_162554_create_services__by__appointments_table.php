@@ -14,7 +14,12 @@ class CreateServicesByAppointmentsTable extends Migration
     public function up()
     {
         Schema::create('services__by__appointments', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('sba_id');
+            $table->unsignedBigInteger('app_id');
+            $table->foreign('app_id')->references('app_id')->on('appointments');
+            $table->unsignedBigInteger('ser_id');
+            $table->foreign('ser_id')->references('ser_id')->on('services');
+            $table->string('sba_state', 20);
             $table->timestamps();
         });
     }

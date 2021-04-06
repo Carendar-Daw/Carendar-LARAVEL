@@ -14,7 +14,12 @@ class CreateCashRegistersTable extends Migration
     public function up()
     {
         Schema::create('cash__registers', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('sal_id');
+            $table->foreign('sal_id')->references('sal_id')->on('saloons');
+            $table->integer('cas_open');
+            $table->integer('cas_current');
+            $table->date('cas_date');
+            $table->string('cas_state', 20);
             $table->timestamps();
         });
     }

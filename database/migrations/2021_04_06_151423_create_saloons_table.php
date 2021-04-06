@@ -14,7 +14,12 @@ class CreateSaloonsTable extends Migration
     public function up()
     {
         Schema::create('saloons', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('sal_id');
+            $table->string('sal_name', 25);
+            $table->string('sal_location', 50);
+            $table->string('sal_email', 30);
+            $table->integer('sal_phone');
+            $table->integer('sal_appointment_delay');
             $table->timestamps();
         });
     }

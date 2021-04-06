@@ -14,7 +14,9 @@ class CreateToursTable extends Migration
     public function up()
     {
         Schema::create('tours', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('sal_id');
+            $table->foreign('sal_id')->references('sal_id')->on('saloons');
+            $table->integer('tour_state');            
             $table->timestamps();
         });
     }
