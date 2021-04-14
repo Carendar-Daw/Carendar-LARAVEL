@@ -9,7 +9,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('saloon', [SaloonController::class, 'show']);
+Route::get('saloon', [SaloonController::class, 'index']);
+Route::get('saloon/{sal_id}', [SaloonController::class, 'show']);
+Route::post('saloon', [SaloonController::class, 'create']);
+Route::put('saloon/{sal_id}', [SaloonController::class, 'update']);
 
 // This endpoint does not need authentication.
 Route::get('/public', function (Request $request) {

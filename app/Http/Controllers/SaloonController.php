@@ -3,48 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Saloon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SaloonController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Saloon  $saloon
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Saloon $saloon)
     {
         $Saloon= Saloon::all();
         return response()->json([
@@ -57,10 +27,49 @@ class SaloonController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param $sal_id
+     * @return JsonResponse
+     */
+    public function show($sal_id)
+    {
+        $Saloon= Saloon::find($sal_id);
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'saloon' => $Saloon,
+            ]
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Saloon  $saloon
-     * @return \Illuminate\Http\Response
+     * @param Saloon $saloon
+     * @return Response
      */
     public function edit(Saloon $saloon)
     {
@@ -70,20 +79,23 @@ class SaloonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Saloon  $saloon
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $sal_id
+     * @return Response
      */
-    public function update(Request $request, Saloon $saloon)
+    public function update(Request $request, $sal_id)
     {
-        //
+        $saloon = Saloon::find($sal_id);
+        $saloon->update($request->all());
+
+        return $saloon;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Saloon  $saloon
-     * @return \Illuminate\Http\Response
+     * @param Saloon $saloon
+     * @return Response
      */
     public function destroy(Saloon $saloon)
     {
