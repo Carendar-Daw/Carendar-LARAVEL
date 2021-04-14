@@ -29,23 +29,21 @@ class SaloonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Saloon
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $saloon = new Saloon;
+        $saloon->sal_name = $request->sal_name;
+        $saloon->sal_location = $request->sal_name;
+        $saloon->sal_email = $request->sal_name;
+        $saloon->sal_phone = $request->sal_name;
+        $saloon->save();
+
+        return $saloon;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+
 
     /**
      * Display the specified resource.
