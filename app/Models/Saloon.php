@@ -9,4 +9,5 @@ class Saloon extends Model
 {
     protected $primaryKey = 'sal_id';
     use HasFactory;
+    protected $guarded = [];
 }

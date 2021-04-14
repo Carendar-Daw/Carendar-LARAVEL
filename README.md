@@ -3,7 +3,7 @@
 //TODO:
 ____
  * [ ] signInSaloon
- * [ ] signUpSaloon
+ * [x] signUpSaloon
  * [ ] createUser
  * [ ] createAppointment
  * [ ] updateAppointment
