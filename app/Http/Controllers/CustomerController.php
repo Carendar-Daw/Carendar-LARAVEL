@@ -3,83 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $customers= Customer::all();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'customers' => $customers,
+            ]
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @param $cus_id
+     * @return JsonResponse
      */
-    public function show(Customer $customer)
+    public function show($cus_id)
     {
-        //
+        $customer= Customer::find($cus_id);
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'saloon' => $customer,
+            ]
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for creating a new resource.
      *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Customer
      */
-    public function edit(Customer $customer)
+    public function create(Request $request)
     {
-        //
-    }
+        $customer = new Customer();
+        $customer->cus_email = $request->cus_email;
+        $customer->cus_color_preference = $request->cus_color_preference;
+        $customer->cus_name = $request->cus_name;
+        $customer->cus_born_date = $request->cus_born_date;
+        $customer->cus_phone  = $request->cus_phone;
+        $customer->save();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Customer $customer)
-    {
-        //
+        return $customer;
     }
 }
