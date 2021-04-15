@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,13 @@ Route::get('customer', [CustomerController::class, 'index']);
 Route::get('customer/{cus_id}', [CustomerController::class, 'show']);
 Route::post('customer', [CustomerController::class, 'create']);
 Route::put('customer/{cus_id}', [CustomerController::class, 'update']);
+
+// Appointment Endpoints
+Route::get('appointment/saloon/{sal_id}', [AppointmentController::class, 'indexSaloon']);
+Route::get('appointment/customer/{cus_id}', [AppointmentController::class, 'indexCustomer']);
+Route::get('appointment/{app_id}', [AppointmentController::class, 'show']);
+Route::post('appointment', [AppointmentController::class, 'create']);
+Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
 
 // This endpoint does not need authentication.
 Route::get('/public', function (Request $request) {

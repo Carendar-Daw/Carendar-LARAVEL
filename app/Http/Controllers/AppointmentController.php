@@ -3,83 +3,168 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function indexSaloon($sal_id)
     {
-        //
-    }
+        try {
+            $appointment = Appointment::all()->where('sal_id',$sal_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'appointments' => $appointment,
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
-
     /**
-     * Store a newly created resource in storage.
+     * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function indexCustomer($cus_id)
     {
-        //
+        try {
+            $appointment = Appointment::all()->where('cus_id',$cus_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'appointments' => $appointment,
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @param $app_id
+     * @return JsonResponse
      */
-    public function show(Appointment $appointment)
+    public function show($app_id)
     {
-        //
+        try {
+            $appointment = Appointment::find($app_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'appointment' => $appointment,
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for creating a new resource.
      *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function edit(Appointment $appointment)
+    public function create(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $appointment = new Appointment();
+            $appointment = $appointment->create($request->all());
+            /*
+            $customer->cus_email = $request->cus_email;
+            $customer->cus_color_preference = $request->cus_color_preference;
+            $customer->cus_name = $request->cus_name;
+            $customer->cus_born_date = $request->cus_born_date;
+            $customer->cus_phone = $request->cus_phone;
+            $customer->save();
+            */
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'saloon' => $appointment,
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error while creating an appointment",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $sal_id
+     * @return JsonResponse
      */
-    public function update(Request $request, Appointment $appointment)
+    public function update(Request $request, $app_id)
     {
-        //
-    }
+        try {
+            DB::beginTransaction();
+            $appointment = Appointment::find($app_id);
+            $appointment->update($request->all());
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'appointment' => $appointment,
+                ]
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Appointment $appointment)
-    {
-        //
+
     }
 }

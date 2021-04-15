@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
+    protected $primaryKey = 'app_id';
     use HasFactory;
+    protected $guarded = [];
 }
