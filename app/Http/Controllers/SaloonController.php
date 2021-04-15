@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Saloon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class SaloonController extends Controller
 {
@@ -14,14 +16,14 @@ class SaloonController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        $Saloon= Saloon::all();
+        $saloons = Saloon::all();
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
             'data' => [
-                'saloons' => $Saloon,
+                'saloons' => $saloons,
             ]
         ]);
     }
@@ -29,31 +31,45 @@ class SaloonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function create(Request $request)
     {
-        $saloon = new Saloon;
-        $saloon->sal_name = $request->sal_name;
-        $saloon->sal_location = $request->sal_location;
-        $saloon->sal_email = $request->sal_email;
-        $saloon->sal_phone = $request->sal_phone;
-        $saloon->sal_appointment_delay = $request->sal_appointment_delay;
-        $saloon->save();
+        try {
+            DB::beginTransaction();
+            $saloon = new Saloon;
+            $saloon = $saloon->create($request->all());
 
-        return $saloon;
+           /*
+            $saloon->sal_name = $request->sal_name;
+            $saloon->sal_location = $request->sal_location;
+            $saloon->sal_email = $request->sal_email;
+            $saloon->sal_phone = $request->sal_phone;
+            $saloon->sal_appointment_delay = $request->sal_appointment_delay;
+            $saloon->save();
+           */
+
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'saloons' => $saloon,
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error at creating saloon",
+                'data' => [
+                    'error' => $e->getMessage()
+                ]
+            ]);
+        }
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-
-    }
 
     /**
      * Display the specified resource.
@@ -63,50 +79,71 @@ class SaloonController extends Controller
      */
     public function show($sal_id)
     {
-        $Saloon= Saloon::find($sal_id);
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'data' => [
-                'saloon' => $Saloon,
-            ]
-        ]);
+        try {
+            $saloon = Saloon::find($sal_id);
+
+            return ($saloon !== null) ?
+                response()->json([
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'data' => [
+                        'saloon' => $saloon,
+                    ]
+                ])
+                :
+                response()->json([
+                    'status' => 500,
+                    'message' => "No se encontró un salón con id: " . $sal_id,
+                    'data' => []
+                ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Saloon $saloon
-     * @return Response
-     */
-    public function edit(Saloon $saloon)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
      * @param $sal_id
-     * @return Response
+     * @return JsonResponse
      */
     public function update(Request $request, $sal_id)
     {
-        $saloon = Saloon::find($sal_id);
-        $saloon->update($request->all());
+        try {
+            DB::beginTransaction();
+            $saloon = Saloon::find($sal_id);
+            $saloon->update($request->all());
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'saloon' => $saloon,
+                ]
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
 
-        return $saloon;
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Saloon $saloon
-     * @return Response
-     */
-    public function destroy(Saloon $saloon)
-    {
-        //
-    }
+
 }
