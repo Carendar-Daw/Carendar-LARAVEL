@@ -19,7 +19,7 @@ class CreateSaloonsTable extends Migration
             $table->string('sal_location', 50);
             $table->string('sal_email', 30);
             $table->integer('sal_phone');
-            $table->integer('sal_appointment_delay');
+            $table->string('auth0_id', 255);
             $table->timestamps();
         });
     }
