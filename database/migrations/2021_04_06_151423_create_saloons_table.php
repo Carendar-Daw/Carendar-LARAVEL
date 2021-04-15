@@ -16,7 +16,7 @@ class CreateSaloonsTable extends Migration
         Schema::create('saloons', function (Blueprint $table) {
             $table->bigIncrements('sal_id');
             $table->string('sal_name', 25);
-            $table->string('sal_location', 50);
+            $table->string('sal_location', 150);
             $table->string('sal_email', 30);
             $table->integer('sal_phone');
             $table->string('auth0_id', 255);
