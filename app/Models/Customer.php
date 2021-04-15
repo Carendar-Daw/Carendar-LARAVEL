@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
+    protected $primaryKey = 'cus_id';
     use HasFactory;
+    protected $guarded = [];
 }
