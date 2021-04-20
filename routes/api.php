@@ -31,11 +31,11 @@ Route::post('appointment', [AppointmentController::class, 'create']);
 Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
 
 // This endpoint does not need authentication.
-Route::get('/public', function (Request $request) {
+Route::get('public', function (Request $request) {
     return response()->json(["message" => "Hello from a public endpoint! You don't need to be authenticated to see this."]);
 });
 
 // These endpoints require a valid access token.
-Route::get('/private', function (Request $request) {
+Route::get('private', function (Request $request) {
     return response()->json(["message" => "Hello from a private endpoint! You need to have a valid access token to see this."]);
 })->middleware('jwt');

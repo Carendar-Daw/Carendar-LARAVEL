@@ -37,7 +37,7 @@ return [
         |   'Auth0\Login\Auth0Controller@callback'
         |
     */
-    'redirect_uri'  => env( 'APP_URL' ).'/auth0/callback',
+    'redirect_uri'  => 'http://localhost/carendar/laravel/Carendar-LARAVEL/public/index.php/api',
 
     /*
         |--------------------------------------------------------------------------
@@ -60,7 +60,7 @@ return [
         |--------------------------------------------------------------------------
         |
     */
-    // 'api_identifier'  => '',
+    'api_identifier'  => 'http://localhost/carendar/laravel/Carendar-LARAVEL/public/index.php/api',
 
 
     /*
@@ -101,7 +101,7 @@ return [
     // ...
         'authorized_issuers' => [ 'https://carendar-daw.eu.auth0.com/' ],
         // ...
-        'api_identifier' => 'http://localhost/carendar/laravel/Carendar-LARAVEL/public/index.php/api',
+        'api_identifier' => 'FnCY4ajfPN6rFmUN4dB4GqY8cMuMetMP',
         // ...
         'supported_algs' => [ 'RS256' ],
         // ...
