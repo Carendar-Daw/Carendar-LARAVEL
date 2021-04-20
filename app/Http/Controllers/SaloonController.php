@@ -37,18 +37,16 @@ class SaloonController extends Controller
     {
         try {
             DB::beginTransaction();
-            $saloon = new Saloon;
-            $saloon = $saloon->create($request->all());
-
-           /*
-            $saloon->sal_name = $request->sal_name;
-            $saloon->sal_location = $request->sal_location;
-            $saloon->sal_email = $request->sal_email;
-            $saloon->sal_phone = $request->sal_phone;
-            $saloon->sal_appointment_delay = $request->sal_appointment_delay;
-            $saloon->save();
-           */
-
+           if (Saloon::where('auth0_id', $request->auth0_id)->exists()) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Ya hay un saloon con estas credenciales",
+            ]);
+           }else{
+                $saloon = new Saloon;
+                $saloon = $saloon->create($request->all());
+           }
+           
             DB::commit();
             return response()->json([
                 'status' => 200,
