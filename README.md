@@ -3,10 +3,12 @@
 //TODO:
 ____
  * [ ] signInSaloon
- * [x] signUpSaloon
- * [ ] createUser
- * [ ] createAppointment
- * [ ] updateAppointment
+ * [ ] signUpSaloon
+ * [x] createSaloon
+ * [x] editSaloon
+ * [x] createUser
+ * [x] createAppointment
+ * [x] updateAppointment
  * [ ] deleteAppointment
  * [ ] createService
  * [ ] updateService
