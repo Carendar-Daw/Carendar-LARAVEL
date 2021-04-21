@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
+    protected $primaryKey = 'sto_id';
     use HasFactory;
+    protected $guarded = [];
 }
