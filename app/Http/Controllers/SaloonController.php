@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMailable;
 use App\Models\Saloon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class SaloonController extends Controller
 {
@@ -48,6 +50,7 @@ class SaloonController extends Controller
            }
            
             DB::commit();
+            $this->sendWelcomeEmail();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -67,7 +70,11 @@ class SaloonController extends Controller
         }
 
     }
-
+    public function sendWelcomeEmail()
+    {
+        $mail = new WelcomeMailable;
+        Mail::to('alvaroarpal@gmail.com')->send($mail);
+    }
 
     /**
      * Display the specified resource.
