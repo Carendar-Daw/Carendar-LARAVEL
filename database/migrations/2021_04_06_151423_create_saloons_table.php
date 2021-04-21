@@ -16,10 +16,11 @@ class CreateSaloonsTable extends Migration
         Schema::create('saloons', function (Blueprint $table) {
             $table->bigIncrements('sal_id');
             $table->string('sal_name', 25);
-            $table->string('sal_location', 150);
-            $table->string('sal_email', 30);
-            $table->integer('sal_phone');
-            $table->string('auth0_id', 255);
+            $table->string('sal_location', 150)->nullable();
+            $table->string('sal_email', 30)->unique();
+            $table->integer('sal_phone')->nullable();
+            $table->string('auth0_id', 255)->unique();
+            $table->string('sal_brand', 255)->nullable();
             $table->timestamps();
         });
     }
