@@ -14,7 +14,8 @@ class CreateStocksTable extends Migration
     public function up()
     {
         Schema::create('stocks', function (Blueprint $table) {
-            $table->bigIncrements('sto_barcode');
+            $table->bigIncrements('sto_id');
+            $table->string('sto_barcode',80)->unique();
             $table->unsignedBigInteger('sal_id');
             $table->foreign('sal_id')->references('sal_id')->on('saloons');
             $table->integer('sto_name');
