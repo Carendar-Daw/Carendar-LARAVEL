@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ServicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,12 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
     
+    // Services Endpoints
+    Route::get('services', [ServicesController::class, 'index']);
+    Route::post('services', [ServicesController::class, 'create']);
+    Route::put('services/{sal_id}', [ServicesController::class, 'update']);
+    Route::delete('services/{sal_id}', [ServicesController::class, 'destroy']);
+
 });
 
 // This endpoint does not need authentication.

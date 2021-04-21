@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
+use Exception;
 use App\Models\Services;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class ServicesController extends Controller
 {
@@ -12,9 +16,16 @@ class ServicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $services = Services::all();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'services' => $services,
+            ]
+        ]);
     }
 
     /**
@@ -22,9 +33,35 @@ class ServicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+           
+   
+                $services = new Services;
+                $services = $services->create($request->all());
+          
+           
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'services' => $services,
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error at creating services",
+                'data' => [
+                    'error' => $e->getMessage()
+                ]
+            ]);
+        }
+
     }
 
     /**
@@ -44,9 +81,9 @@ class ServicesController extends Controller
      * @param  \App\Models\Services  $services
      * @return \Illuminate\Http\Response
      */
-    public function show(Services $services)
+    public function show($ser_id)
     {
-        //
+       //
     }
 
     /**
@@ -67,9 +104,32 @@ class ServicesController extends Controller
      * @param  \App\Models\Services  $services
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Services $services)
+    public function update(Request $request, $ser_id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $services = Services::find($ser_id);
+            $services->update($request->all());
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'services' => $services,
+                ]
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
+
+
     }
 
     /**
@@ -78,8 +138,27 @@ class ServicesController extends Controller
      * @param  \App\Models\Services  $services
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Services $services)
+    public function destroy($ser_id)
     {
-        //
+       try {
+            DB::beginTransaction();
+            $services = Services::find($ser_id);
+            $services->delete();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso service delete",
+
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 }

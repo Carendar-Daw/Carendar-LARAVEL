@@ -1,109 +1,79 @@
 <?php
 
-return [
+return array(
 
     /*
-        |--------------------------------------------------------------------------
-        |   Your auth0 domain
-        |--------------------------------------------------------------------------
-        |   As set in the auth0 administration page
-        |
+    |--------------------------------------------------------------------------
+    |   Your auth0 domain
+    |--------------------------------------------------------------------------
+    |   As set in the auth0 administration page
+    |
     */
-    'domain'        => 'carendar-daw.eu.auth0.com',
+
+    'domain'        => getenv('AUTH0_DOMAIN'),
+    /*
+    |--------------------------------------------------------------------------
+    |   Your APP id
+    |--------------------------------------------------------------------------
+    |   As set in the auth0 administration page
+    |
+    */
+
+    'client_id'     => getenv('AUTH0_CLIENT_ID'),
 
     /*
-        |--------------------------------------------------------------------------
-        |   Your APP id
-        |--------------------------------------------------------------------------
-        |   As set in the auth0 administration page
-        |
+    |--------------------------------------------------------------------------
+    |   Your APP secret
+    |--------------------------------------------------------------------------
+    |   As set in the auth0 administration page
+    |
     */
-    'client_id'     => 'FnCY4ajfPN6rFmUN4dB4GqY8cMuMetMP',
+    'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
+
+
+   /*
+    |--------------------------------------------------------------------------
+    |   The redirect URI
+    |--------------------------------------------------------------------------
+    |   Should be the same that the one configure in the route to handle the
+    |   'Auth0\Login\Auth0Controller@callback'
+    |
+    */
+
+    'redirect_uri'  => getenv('AUTH0_CALLBACK_URL'),
 
     /*
-        |--------------------------------------------------------------------------
-        |   Your APP secret
-        |--------------------------------------------------------------------------
-        |   As set in the auth0 administration page
-        |
+    |--------------------------------------------------------------------------
+    |   Persistence Configuration
+    |--------------------------------------------------------------------------
+    |   persist_user            (Boolean) Optional. Indicates if you want to persist the user info, default true
+    |   persist_access_token    (Boolean) Optional. Indicates if you want to persist the access token, default false
+    |   persist_id_token        (Boolean) Optional. Indicates if you want to persist the id token, default false
+    |
     */
-    'client_secret' => '3gi9Fw68gF2ECKeJN1bY7NXDjSnKMfeCXu5dVK9B--NWSZJxeQJYeFkqbXSuWWH4',
+
+    // 'persist_user' => true,
+    // 'persist_access_token' => false,
+    // 'persist_id_token' => false,
 
     /*
-        |--------------------------------------------------------------------------
-        |   The redirect URI
-        |--------------------------------------------------------------------------
-        |   Should be the same that the one configure in the route to handle the
-        |   'Auth0\Login\Auth0Controller@callback'
-        |
+    |--------------------------------------------------------------------------
+    |   The authorized token issuers
+    |--------------------------------------------------------------------------
+    |   This is used to verify the decoded tokens when using RS256
+    |
     */
-    'redirect_uri'  => 'http://localhost/carendar/laravel/Carendar-LARAVEL/public/index.php/api',
+    'authorized_issuers'  => [ 'https://'.getenv('AUTH0_DOMAIN').'/' ],
 
     /*
-        |--------------------------------------------------------------------------
-        |   Persistence Configuration
-        |--------------------------------------------------------------------------
-        |   persist_user            (Boolean) Optional. Indicates if you want to persist the user info, default true
-        |   persist_access_token    (Boolean) Optional. Indicates if you want to persist the access token, default false
-        |   persist_refresh_token   (Boolean) Optional. Indicates if you want to persist the refresh token, default false
-        |   persist_id_token        (Boolean) Optional. Indicates if you want to persist the id token, default false
-        |
+    |--------------------------------------------------------------------------
+    |   The api identifier
+    |--------------------------------------------------------------------------
+    |   This is used to verify the decoded tokens when using RS256
+    |
     */
-    'persist_user' => true,
-    'persist_access_token' => false,
-    'persist_refresh_token' => false,
-    'persist_id_token' => false,
+    'api_identifier'  => getenv('AUTH0_CLIENT_ID'),
 
-    /*
-        |--------------------------------------------------------------------------
-        |   The authorized token audiences
-        |--------------------------------------------------------------------------
-        |
-    */
-    'api_identifier'  => 'http://localhost/carendar/laravel/Carendar-LARAVEL/public/index.php/api',
+    'supported_algs' => ['RS256']
 
-
-    /*
-        |--------------------------------------------------------------------------
-        |   Auth0 Organizations
-        |--------------------------------------------------------------------------
-        |   organization (string) Optional. Id of an Organization, if being used. Used when generating log in urls and validating token claims.
-    */
-    // 'organization'  => '',
-
-    /*
-        |--------------------------------------------------------------------------
-        |   The secret format
-        |--------------------------------------------------------------------------
-        |   Used to know if it should decode the secret when using HS256
-        |
-    */
-    'secret_base64_encoded'  => false,
-
-    /*
-        |--------------------------------------------------------------------------
-        |   Supported algorithms
-        |--------------------------------------------------------------------------
-        |   Token decoding algorithms supported by your API
-        |
-    */
-    'supported_algs'        => [ 'RS256' ],
-
-    /*
-        |--------------------------------------------------------------------------
-        |   Guzzle Options
-        |--------------------------------------------------------------------------
-        |   guzzle_options    (array) optional. Used to specify additional connection options e.g. proxy settings
-        |
-    */
-    // 'guzzle_options' => []
-    // config/laravel-auth0.php
-    // ...
-        'authorized_issuers' => [ 'https://carendar-daw.eu.auth0.com/' ],
-        // ...
-        'api_identifier' => 'FnCY4ajfPN6rFmUN4dB4GqY8cMuMetMP',
-        // ...
-        'supported_algs' => [ 'RS256' ],
-        // ...
-   
-];
+);
