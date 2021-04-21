@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Services extends Model
 {
+     protected $primaryKey = 'ser_id';
     use HasFactory;
+    protected $guarded = [];
 }
