@@ -22,9 +22,8 @@ class ServicesController extends Controller
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
-            'data' => [
-                'services' => $services,
-            ]
+            'services' => $services,
+        
         ]);
     }
 
@@ -48,18 +47,16 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'services' => $services,
-                ]
+                'services' => $services,
+ 
             ]);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error at creating services",
-                'data' => [
-                    'error' => $e->getMessage()
-                ]
+                'error' => $e->getMessage()
+   
             ]);
         }
 
@@ -82,18 +79,16 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'services' => $services,
-                ]
+                'services' => $services,
+
             ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
+  
             ]);
         }
 
@@ -112,17 +107,15 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'service' => $services,
-                ]
+                'service' => $services,
+   
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
+            
             ]);
         }
 
@@ -151,9 +144,8 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
+      
             ]);
         }
     }
