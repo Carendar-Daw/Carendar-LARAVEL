@@ -13,10 +13,10 @@ class CreateStockByServicesAppointmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stock__by__services__appointments', function (Blueprint $table) {
+        Schema::create('stock_by__services__appointments', function (Blueprint $table) {
             $table->bigIncrements('sbs_id');
-            $table->unsignedBigInteger('sto_barcode');
-            $table->foreign('sto_barcode')->references('sto_barcode')->on('stocks');
+            $table->unsignedBigInteger('sto_id');
+            $table->foreign('sto_id')->references('sto_id')->on('stocks');
             $table->unsignedBigInteger('sba_id');
             $table->foreign('sba_id')->references('sba_id')->on('services__by__appointments');
             $table->timestamps();

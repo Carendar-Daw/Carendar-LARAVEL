@@ -22,16 +22,16 @@ class ServicesController extends Controller
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
-            'data' => [
-                'services' => $services,
-            ]
+            'services' => $services,
+        
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function create(Request $request)
     {
@@ -47,62 +47,27 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'services' => $services,
-                ]
+                'services' => $services,
+ 
             ]);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error at creating services",
-                'data' => [
-                    'error' => $e->getMessage()
-                ]
+                'error' => $e->getMessage()
+   
             ]);
         }
 
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Services  $services
-     * @return \Illuminate\Http\Response
-     */
-    public function show($ser_id)
-    {
-       //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Services  $services
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Services $services)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Services  $services
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param $ser_id
+     * @return JsonResponse
      */
     public function update(Request $request, $ser_id)
     {
@@ -114,18 +79,16 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'services' => $services,
-                ]
+                'services' => $services,
+
             ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
+  
             ]);
         }
 
@@ -133,10 +96,36 @@ class ServicesController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function indexService($sto_id)
+    {
+        try {
+            $services = Services::all()->where('$sto_id',$sto_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'service' => $services,
+   
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            
+            ]);
+        }
+
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Services  $services
-     * @return \Illuminate\Http\Response
+     * @param $ser_id
+     * @return JsonResponse
      */
     public function destroy($ser_id)
     {
@@ -155,9 +144,8 @@ class ServicesController extends Controller
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
+      
             ]);
         }
     }

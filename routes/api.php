@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\StockController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,10 +35,17 @@ Route::group(['middleware' => 'jwt:api'], function () {
     
     // Services Endpoints
     Route::get('services', [ServicesController::class, 'index']);
+    Route::get('services/{sal_id}', [ServicesController::class, 'indexService']);
     Route::post('services', [ServicesController::class, 'create']);
     Route::put('services/{sal_id}', [ServicesController::class, 'update']);
     Route::delete('services/{sal_id}', [ServicesController::class, 'destroy']);
 
+    // Stocks Endpoints
+    Route::get('stock', [StockController::class, 'index']);
+    Route::get('stock/{sto_id}', [StockController::class, 'indexStock']);
+    Route::post('stock', [StockController::class, 'create']);
+    Route::put('stock/{sto_id}', [StockController::class, 'update']);
+    Route::delete('stock/{sto_id}', [StockController::class, 'destroy']);
 });
 
 // This endpoint does not need authentication.
