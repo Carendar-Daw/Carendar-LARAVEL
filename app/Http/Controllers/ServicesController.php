@@ -23,7 +23,11 @@ class ServicesController extends Controller
             'status' => 200,
             'message' => "Exitoso",
             'services' => $services,
+<<<<<<< HEAD
+  
+=======
         
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
         ]);
     }
 
@@ -48,7 +52,11 @@ class ServicesController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'services' => $services,
+<<<<<<< HEAD
+  
+=======
  
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -56,7 +64,11 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error at creating services",
                 'error' => $e->getMessage()
+<<<<<<< HEAD
+          
+=======
    
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
             ]);
         }
 
@@ -80,7 +92,11 @@ class ServicesController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'services' => $services,
+<<<<<<< HEAD
+   
+=======
 
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
             ]);
         }catch (Exception $e){
             DB::rollBack();
@@ -88,7 +104,11 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
+<<<<<<< HEAD
+
+=======
   
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
             ]);
         }
 
@@ -145,7 +165,10 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
+<<<<<<< HEAD
+=======
       
+>>>>>>> 7165bc2581af9d09e59e866f4de2435f46e0a3d9
             ]);
         }
     }
