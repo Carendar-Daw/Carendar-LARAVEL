@@ -18,15 +18,14 @@ class SaloonController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index($id_auth): JsonResponse
     {
-        $saloons = Saloon::all();
+        $saloons = Saloon::where('auth0_id', $id_auth)->first();
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
-            'data' => [
-                'saloons' => $saloons,
-            ]
+            'saloons' => $saloons,
+
         ]);
     }
 
@@ -43,20 +42,18 @@ class SaloonController extends Controller
             return response()->json([
                 'status' => 400,
                 'message' => "Ya hay un saloon con estas credenciales",
-            ]);
+            ],400);
            }else{
                 $saloon = new Saloon;
                 $saloon = $saloon->create($request->all());
            }
            
             DB::commit();
-            $this->sendWelcomeEmail();
+
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloons' => $saloon,
-                ]
+                 'saloons' => $saloon,
             ]);
         } catch (Exception $e) {
             DB::rollBack();

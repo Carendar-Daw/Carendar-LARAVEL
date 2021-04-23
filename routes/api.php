@@ -15,7 +15,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'jwt:api'], function () {
     // Saloon Endpoints
-    Route::get('saloon', [SaloonController::class, 'index']);
+    Route::get('saloon/{id_auth}', [SaloonController::class, 'index']);
     Route::get('saloon/{sal_id}', [SaloonController::class, 'show']);
     Route::post('saloon', [SaloonController::class, 'create']);
     Route::put('saloon/{sal_id}', [SaloonController::class, 'update']);
@@ -34,11 +34,10 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
     
     // Services Endpoints
-    Route::get('services', [ServicesController::class, 'index']);
-    Route::get('services/{sal_id}', [ServicesController::class, 'indexService']);
+    Route::get('services/{sal_id}', [ServicesController::class, 'index']);
     Route::post('services', [ServicesController::class, 'create']);
-    Route::put('services/{sal_id}', [ServicesController::class, 'update']);
-    Route::delete('services/{sal_id}', [ServicesController::class, 'destroy']);
+    Route::put('services/{ser_id}', [ServicesController::class, 'update']);
+    Route::delete('services/{ser_id}', [ServicesController::class, 'destroy']);
 
     // Stocks Endpoints
     Route::get('stock', [StockController::class, 'index']);

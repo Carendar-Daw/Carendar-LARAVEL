@@ -18,6 +18,8 @@ class CreateServicesTable extends Migration
             $table->integer('ser_price');
             $table->string('ser_description');
             $table->integer('ser_time');
+            $table->unsignedBigInteger('sal_id');
+            $table->foreign('sal_id')->references('sal_id')->on('saloons');
             $table->timestamps();
         });
     }
