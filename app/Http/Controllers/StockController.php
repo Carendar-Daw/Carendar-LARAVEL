@@ -3,83 +3,161 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stock;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $stock = Stock::all();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'data' => [
+                'stock' => $stock,
+            ]
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+
+            $stock = new Stock();
+            $stock = $stock->create($request->all());
+
+
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'stock' => $stock,
+                ]
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error at creating services",
+                'data' => [
+                    'error' => $e->getMessage()
+                ]
+            ]);
+        }
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Stock $stock)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Stock $stock)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
+     * @param  Services  $services
+     * @return JsonResponse
      */
-    public function update(Request $request, Stock $stock)
+    public function update(Request $request, $ser_id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $stock = Stock::find($ser_id);
+            $stock->update($request->all());
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'stock' => $stock,
+                ]
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
+
+
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function indexStock($sto_id)
+    {
+        try {
+            $stock = Stock::all()->where('$sto_id',$sto_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'stock' => $stock,
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
+     * @param $ser_id
+     * @return JsonResponse
      */
-    public function destroy(Stock $stock)
+    public function destroy($ser_id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $stock = Stock::find($ser_id);
+            $stock->delete();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso item delete",
+                'data'=>[
+                    'item'=>$stock
+                ]
+
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 }
