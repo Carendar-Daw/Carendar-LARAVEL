@@ -32,6 +32,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::get('appointment/{app_id}', [AppointmentController::class, 'show']);
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
+    Route::delete('appointment/{app_id}', [AppointmentController::class, 'delete']);
     
     // Services Endpoints
     Route::get('services', [ServicesController::class, 'index']);
