@@ -29,6 +29,12 @@ class SaloonController extends Controller
         ]);
     }
 
+    public function checkId($id_auth)
+        {
+            $saloons = Saloon::where('auth0_id', $id_auth)->first();
+            return $saloons;
+        }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -38,18 +44,19 @@ class SaloonController extends Controller
     {
         try {
             DB::beginTransaction();
+
            if (Saloon::where('auth0_id', $request->auth0_id)->exists()) {
+            $saloons = Saloon::where('auth0_id', $request->auth0_id)->first();
             return response()->json([
                 'status' => 400,
                 'message' => "Ya hay un saloon con estas credenciales",
-            ],400);
+                'saloon' => $saloons,
+            ]);
            }else{
                 $saloon = new Saloon;
                 $saloon = $saloon->create($request->all());
            }
-           
             DB::commit();
-
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",

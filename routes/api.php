@@ -34,10 +34,10 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
     
     // Services Endpoints
-    Route::get('services/{sal_id}', [ServicesController::class, 'index']);
+    Route::get('services', [ServicesController::class, 'index']);
     Route::post('services', [ServicesController::class, 'create']);
-    Route::put('services/{ser_id}', [ServicesController::class, 'update']);
-    Route::delete('services/{ser_id}', [ServicesController::class, 'destroy']);
+    Route::put('services', [ServicesController::class, 'update']);
+    Route::delete('services', [ServicesController::class, 'destroy']);
 
     // Stocks Endpoints
     Route::get('stock', [StockController::class, 'index']);

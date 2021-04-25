@@ -16,8 +16,10 @@ class ServicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($sal_id): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+
+        $sal_id = $request->get('sal_id');
         $services = Services::where('sal_id', $sal_id)->get();
         return response()->json([
             'status' => 200,
@@ -35,13 +37,14 @@ class ServicesController extends Controller
      */
     public function create(Request $request)
     {
+
         try {
             DB::beginTransaction();
-           
-   
+                $sal_id = $request->get('sal_id');
                 $services = new Services;
-                $services = $services->create($request->all());
-          
+                $services->sal_id = $sal_id;
+                $services = $services->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+
            
             DB::commit();
             return response()->json([
@@ -69,11 +72,12 @@ class ServicesController extends Controller
      * @param $ser_id
      * @return JsonResponse
      */
-    public function update(Request $request, $ser_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
-            $services = Services::find($ser_id);
+            $sal_id = $request->get('sal_id');
+            $services = Services::find($ser_id)->where('sal_id', $sal_id);
             $services->update($request->all());
             DB::commit();
             return response()->json([
@@ -127,11 +131,12 @@ class ServicesController extends Controller
      * @param $ser_id
      * @return JsonResponse
      */
-    public function destroy($ser_id)
+    public function destroy()
     {
        try {
             DB::beginTransaction();
-            $services = Services::find($ser_id);
+            $sal_id = $request->get('sal_id');
+            $services = Services::find($ser_id)->where('sal_id', $sal_id);
             $services->delete();
             DB::commit();
             return response()->json([
