@@ -39,9 +39,11 @@ class CheckJWT
         try {
             $tokenInfo = $auth0->decodeJWT($accessToken);
             $user = $this->userRepository->getUserByDecodedJWT($tokenInfo);
-            $existsSaloon = $Saloon->checkId($user->sub);
+            $existsSaloon = $Saloon->checkIfSaloonExists($user->sub, $request);
+             if($existsSaloon){
+             $request->attributes->add(['sal_id' => $existsSaloon->sal_id]);
+             }
 
-            $request->attributes->add(['sal_id' => $existsSaloon->sal_id]);
 
             if (!$user) {
                 return response()->json(["message" => "Unauthorized user"], 401);

@@ -72,12 +72,15 @@ class ServicesController extends Controller
      * @param $ser_id
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request, $ser_id)
     {
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
-            $services = Services::find($ser_id)->where('sal_id', $sal_id);
+
+            $services = Services::find($ser_id)->where('sal_id', $sal_id)->get();
+            var_dump($services);
+            exit;
             $services->update($request->all());
             DB::commit();
             return response()->json([
@@ -131,18 +134,26 @@ class ServicesController extends Controller
      * @param $ser_id
      * @return JsonResponse
      */
-    public function destroy()
+    public function destroy(Request $request, $ser_id)
     {
        try {
             DB::beginTransaction();
-            $sal_id = $request->get('sal_id');
-            $services = Services::find($ser_id)->where('sal_id', $sal_id);
-            $services->delete();
+             $sal_id = $request->get('sal_id');
+
+            if(Services::find($ser_id)->where('sal_id', $sal_id)->exists()){
+                $services = Services::find($ser_id)->where('sal_id', $sal_id);
+                $services->delete();
+            }else{
+                return response()->json([
+                      'status' => 400,
+                      'message' => "No tienes este servicio",
+                      ]);
+            }
+
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso service delete",
-
             ]);
         }catch (Exception $e){
             DB::rollBack();
@@ -150,7 +161,6 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-
             ]);
         }
     }

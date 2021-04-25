@@ -36,8 +36,8 @@ Route::group(['middleware' => 'jwt:api'], function () {
     // Services Endpoints
     Route::get('services', [ServicesController::class, 'index']);
     Route::post('services', [ServicesController::class, 'create']);
-    Route::put('services', [ServicesController::class, 'update']);
-    Route::delete('services', [ServicesController::class, 'destroy']);
+    Route::put('services/{ser_id}', [ServicesController::class, 'update']);
+    Route::delete('services/{ser_id}', [ServicesController::class, 'destroy']);
 
     // Stocks Endpoints
     Route::get('stock', [StockController::class, 'index']);

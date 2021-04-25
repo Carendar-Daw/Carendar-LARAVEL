@@ -29,10 +29,17 @@ class SaloonController extends Controller
         ]);
     }
 
-    public function checkId($id_auth)
+    public function checkIfSaloonExists($id_auth, $request)
         {
-            $saloons = Saloon::where('auth0_id', $id_auth)->first();
-            return $saloons;
+            if(Saloon::where('auth0_id', $id_auth)->exists()){
+              $saloons = Saloon::where('auth0_id', $id_auth)->first();
+              return $saloons;
+            }else{
+               $saloon = new Saloon;
+               $saloon = $saloon->create($request->all());
+               return $saloon;
+            }
+
         }
 
     /**
