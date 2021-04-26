@@ -31,6 +31,7 @@ class SaloonController extends Controller
 
     public function checkIfSaloonExists($id_auth, $request)
         {
+
             if(Saloon::where('auth0_id', $id_auth)->exists()){
               $saloons = Saloon::where('auth0_id', $id_auth)->first();
               return $saloons;

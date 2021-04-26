@@ -45,7 +45,7 @@ class ServicesController extends Controller
                 $services->sal_id = $sal_id;
                 $services = $services->create(array_merge($request->all(), ['sal_id' => $sal_id]));
 
-           
+
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -77,29 +77,30 @@ class ServicesController extends Controller
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
+            if(Services::where('sal_id', $sal_id)->where('ser_id', $ser_id)->exists()){
+             $services = Services::where('sal_id', $sal_id)->where('ser_id', $ser_id)->first();
+             $services->update($request->all());
+             DB::commit();
+                 return response()->json([
+                        'status' => 200,
+                        'message' => "Exitoso",
+                        'services' => $services,
+                 ]);
+            }else{
+                 return response()->json([
+                        'status' => 400,
+                        'message' => "Error ninguna categoria",
+                 ],400);
+            }
 
-            $services = Services::find($ser_id)->where('sal_id', $sal_id)->get();
-            var_dump($services);
-            exit;
-            $services->update($request->all());
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'services' => $services,
-
-            ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-
-            ]);
+            ],500);
         }
-
-
     }
 
     /**
@@ -110,19 +111,20 @@ class ServicesController extends Controller
     public function indexService($sto_id)
     {
         try {
-            $services = Services::all()->where('$sto_id',$sto_id);
+            $sal_id = $request->get('sal_id');
+            $services = Services::all()->where('sal_id',$sal_id);
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'service' => $services,
-   
+
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            
+
             ]);
         }
 
@@ -140,8 +142,8 @@ class ServicesController extends Controller
             DB::beginTransaction();
              $sal_id = $request->get('sal_id');
 
-            if(Services::find($ser_id)->where('sal_id', $sal_id)->exists()){
-                $services = Services::find($ser_id)->where('sal_id', $sal_id);
+             if(Services::where('sal_id', $sal_id)->where('ser_id', $ser_id)->exists()){
+                $services = Services::where('sal_id', $sal_id)->where('ser_id', $ser_id)->first();
                 $services->delete();
             }else{
                 return response()->json([
