@@ -16,24 +16,21 @@ class CustomerController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $customers = Customer::all();
+            $sal_id = $request->get('sal_id');
+            $customers = Customer::where('sal_id', $sal_id)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'customers' => $customers,
-                ]
+                'customers' => $customers,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -45,24 +42,21 @@ class CustomerController extends Controller
      * @param $cus_id
      * @return JsonResponse
      */
-    public function show($cus_id)
+    public function show(Request $request, $cus_id)
     {
         try {
-            $customer = Customer::find($cus_id);
+            $sal_id = $request->get('sal_id');
+            $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $customer,
-                ]
+                'customers' => $customer,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -77,23 +71,16 @@ class CustomerController extends Controller
     {
         try {
             DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
             $customer = new Customer();
-            $customer = $customer->create($request->all());
-            /*
-            $customer->cus_email = $request->cus_email;
-            $customer->cus_color_preference = $request->cus_color_preference;
-            $customer->cus_name = $request->cus_name;
-            $customer->cus_born_date = $request->cus_born_date;
-            $customer->cus_phone = $request->cus_phone;
-            $customer->save();
-            */
+            $customer = $customer->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $customer,
-                ]
+                'customers' => $customer,
+
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -114,19 +101,18 @@ class CustomerController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request, $cus_id)
     {
         try {
             DB::beginTransaction();
-            $customer = Customer::find($sal_id);
-            $customer->update($request->all());
+            $sal_id = $request->get('sal_id');
+            $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
+            $customer->update(array_merge($request->all(), ['sal_id' => $sal_id]));
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'customer' => $customer,
-                ]
+                'customer' => $customer,
             ]);
         }catch (Exception $e){
             DB::rollBack();
@@ -138,7 +124,29 @@ class CustomerController extends Controller
                 ]
             ]);
         }
-
-
     }
+     public function destroy(Request $request, $cus_id)
+        {
+            try {
+                DB::beginTransaction();
+                $sal_id = $request->get('sal_id');
+                $customer = Customer::where('sal_id', $sal_id)->where('cus_id', $cus_id)->first();
+                $customer->delete();
+                DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'customer' => $customer,
+                ]);
+            }catch (Exception $e){
+                DB::rollBack();
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Error",
+                    'data' => [
+                        'error' => $e->getMessage(),
+                    ]
+                ]);
+            }
+        }
 }

@@ -16,19 +16,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'jwt:api'], function () {
     // Saloon Endpoints
     Route::get('saloon/{id_auth}', [SaloonController::class, 'index']);
-    Route::get('saloon/{sal_id}', [SaloonController::class, 'show']);
+    Route::get('saloon', [SaloonController::class, 'show']);
     Route::post('saloon', [SaloonController::class, 'create']);
-    Route::put('saloon/{sal_id}', [SaloonController::class, 'update']);
+    Route::put('saloon', [SaloonController::class, 'update']);
 
     // Customer Endpoints
     Route::get('customer', [CustomerController::class, 'index']);
     Route::get('customer/{cus_id}', [CustomerController::class, 'show']);
     Route::post('customer', [CustomerController::class, 'create']);
     Route::put('customer/{cus_id}', [CustomerController::class, 'update']);
+    Route::delete('customer/{cus_id}', [CustomerController::class, 'destroy']);
 
     // Appointment Endpoints
-    Route::get('appointment/saloon/{sal_id}', [AppointmentController::class, 'indexSaloon']);
-    Route::get('appointment/customer/{cus_id}', [AppointmentController::class, 'indexCustomer']);
+    Route::get('appointment/saloon', [AppointmentController::class, 'index']);
+    Route::get('appointment/customer/{cus_id}', [AppointmentController::class, 'indexAppointmentByCustomer']);
     Route::get('appointment/{app_id}', [AppointmentController::class, 'show']);
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);

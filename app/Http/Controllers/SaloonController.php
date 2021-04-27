@@ -25,7 +25,6 @@ class SaloonController extends Controller
             'status' => 200,
             'message' => "Exitoso",
             'saloons' => $saloons,
-
         ]);
     }
 
@@ -94,11 +93,12 @@ class SaloonController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function show($sal_id)
+    public function show(Request $request)
     {
         try {
-            $saloon = Saloon::find($sal_id);
 
+            $sal_id = $request->get('sal_id');
+             $saloon = Saloon::find($sal_id);
             return ($saloon !== null) ?
                 response()->json([
                     'status' => 200,
@@ -134,20 +134,23 @@ class SaloonController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
-            $saloon = Saloon::find($sal_id);
+            $sal_id = $request->get('sal_id');
+            if($saloon = Saloon::where('sal_id', $sal_id)->first()){
             $saloon->update($request->all());
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $saloon,
+             DB::commit();
+             return response()->json([
+              'status' => 200,
+              'message' => "Exitoso",
+              'data' => [
+              'saloon' => $saloon,
                 ]
-            ]);
+              ]);
+            }
+
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
