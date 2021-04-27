@@ -33,10 +33,15 @@ class LanguageController extends Controller
         try {
             DB::beginTransaction();
            
-   
+            if (Language::where('sal_id', $request->sal_id)->exists()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Ya hay un language creado",
+                ]);
+               }else{
                 $language = new Language;
-                $language = $language->create($request->all());
-          
+                $language = $language->create($request->all());  
+               }  
            
             DB::commit();
             return response()->json([

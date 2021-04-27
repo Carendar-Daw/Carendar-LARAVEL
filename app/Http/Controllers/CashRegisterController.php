@@ -54,7 +54,6 @@ class CashRegisterController extends Controller
           
             ]);
         }
-
     }
     
     public function indexCashRegister($sal_id)
@@ -104,8 +103,6 @@ class CashRegisterController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-
-
     }
 
 
