@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Customer;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,11 +20,13 @@ class AppointmentController extends Controller
     {
         try {
             $appointment = Appointment::all()->where('sal_id',$sal_id);
+            $customer = Customer::all();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'data' => [
                     'appointments' => $appointment,
+                    'customers' => $customer
                 ]
             ]);
         } catch (Exception $e) {
@@ -164,7 +167,37 @@ class AppointmentController extends Controller
                 ]
             ]);
         }
-
-
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $sal_id
+     * @return JsonResponse
+     */
+    public function delete(Request $request, $app_id)
+    {
+        try {
+            DB::beginTransaction();
+            $appointment = Appointment::find($app_id);
+            $appointment->delete();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'data' => [
+                    'appointment' => $appointment,
+                ]
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 }
