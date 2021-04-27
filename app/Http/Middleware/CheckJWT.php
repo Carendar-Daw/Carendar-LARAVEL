@@ -7,11 +7,12 @@ use Auth0\Login\Contract\Auth0UserRepository;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Closure;
-
+use App\Http\Controllers\SaloonController;
 class CheckJWT
 {
     protected $userRepository;
 
+    public $attributes;
     /**
      * CheckJWT constructor.
      *
@@ -34,9 +35,16 @@ class CheckJWT
         $auth0 = \App::make('auth0');
 
         $accessToken = $request->bearerToken();
+        $Saloon = new SaloonController;
         try {
             $tokenInfo = $auth0->decodeJWT($accessToken);
             $user = $this->userRepository->getUserByDecodedJWT($tokenInfo);
+            $existsSaloon = $Saloon->checkIfSaloonExists($user->sub, $request);
+             if($existsSaloon){
+             $request->attributes->add(['sal_id' => $existsSaloon->sal_id]);
+             }
+
+
             if (!$user) {
                 return response()->json(["message" => "Unauthorized user"], 401);
             }

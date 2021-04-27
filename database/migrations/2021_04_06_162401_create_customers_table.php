@@ -18,6 +18,8 @@ class CreateCustomersTable extends Migration
             $table->string('cus_email', 30);
             $table->string('cus_color_preference', 25);
             $table->string('cus_name', 20);
+            $table->unsignedBigInteger('sal_id');
+            $table->foreign('sal_id')->references('sal_id')->on('saloons');
             $table->date('cus_born_date');
             $table->integer('cus_phone');
             $table->timestamps();

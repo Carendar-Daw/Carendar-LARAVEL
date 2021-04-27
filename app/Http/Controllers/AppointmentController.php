@@ -16,26 +16,23 @@ class AppointmentController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexSaloon($sal_id)
+    public function index (Request $request)
     {
         try {
-            $appointment = Appointment::all()->where('sal_id',$sal_id);
-            $customer = Customer::all();
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->get();
+            $customer = Customer::where('sal_id', $sal_id)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointments' => $appointment,
-                    'customers' => $customer
-                ]
+                'appointments' => $appointment,
+                 'customers' => $customer
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -45,16 +42,15 @@ class AppointmentController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexCustomer($cus_id)
+    public function indexAppointmentByCustomer(Request $request, $cus_id)
     {
         try {
-            $appointment = Appointment::all()->where('cus_id',$cus_id);
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('cus_id',$cus_id)->where('sal_id', $sal_id)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointments' => $appointment,
-                ]
+                 'appointments' => $appointment,
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -74,16 +70,16 @@ class AppointmentController extends Controller
      * @param $app_id
      * @return JsonResponse
      */
-    public function show($app_id)
+    public function show(Request $request, $app_id)
     {
         try {
-            $appointment = Appointment::find($app_id);
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointment' => $appointment,
-                ]
+                'appointment' => $appointment,
+
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -106,23 +102,17 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
             $appointment = new Appointment();
-            $appointment = $appointment->create($request->all());
-            /*
-            $customer->cus_email = $request->cus_email;
-            $customer->cus_color_preference = $request->cus_color_preference;
-            $customer->cus_name = $request->cus_name;
-            $customer->cus_born_date = $request->cus_born_date;
-            $customer->cus_phone = $request->cus_phone;
-            $customer->save();
-            */
+            $appointment->sal_id = $sal_id;
+            $appointment = $appointment->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $appointment,
-                ]
+                 'appointment' => $appointment,
+
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -147,24 +137,22 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $appointment = Appointment::find($app_id);
-            $appointment->update($request->all());
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
+            $appointment->sal_id = $sal_id;
+            $appointment->update(array_merge($request->all(), ['sal_id' => $sal_id]));
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointment' => $appointment,
-                ]
+                'appointment' => $appointment,
             ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -179,24 +167,21 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $appointment = Appointment::find($app_id);
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
             $appointment->delete();
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointment' => $appointment,
-                ]
+                'appointment' => $appointment,
             ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
     }
