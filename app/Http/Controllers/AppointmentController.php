@@ -22,10 +22,12 @@ class AppointmentController extends Controller
             $sal_id = $request->get('sal_id');
             // $appointment = Appointment::where('sal_id', $sal_id)->get();
             $appointment = DB::table('appointments')
+                ->select('appointments.*','cus_name','services__by__appointments.*','services.ser_description',DB::raw("SUM(services.ser_time) as app_time"))
                 ->join('customers','appointments.cus_id','=','customers.cus_id')
                 ->leftjoin('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
                 ->leftjoin('services', 'services.ser_id','=','services__by__appointments.ser_id')
-                ->select('appointments.*','cus_name','services__by__appointments.*','services.ser_description','services.ser_time')
+                ->where('appointments.sal_id',$sal_id)
+                ->groupBy('appointments.app_id')
                 ->get();
             return response()->json([
                 'status' => 200,
