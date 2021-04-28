@@ -15,9 +15,10 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('cus_id');
-            $table->string('cus_email', 30);
-            $table->string('cus_color_preference', 25);
+            $table->string('cus_email', 30)->unique();
+            $table->string('cus_color_preference', 25)->default('#8265a7');
             $table->string('cus_name', 20);
+            $table->string('cus_photo')->default('defaultAvatar.jpg');
             $table->unsignedBigInteger('sal_id');
             $table->foreign('sal_id')->references('sal_id')->on('saloons');
             $table->date('cus_born_date');

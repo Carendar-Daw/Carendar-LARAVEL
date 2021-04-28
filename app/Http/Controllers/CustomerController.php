@@ -60,7 +60,7 @@ class CustomerController extends Controller
             ]);
         }
     }
-
+//https://eu.ui-avatars.com/api/?name=Alvaro+Arcal&background=0D8ABC&color=fff
     /**
      * Show the form for creating a new resource.
      *
@@ -72,8 +72,27 @@ class CustomerController extends Controller
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
+            $customers = Customer::where('sal_id', $sal_id)->where('cus_email', $request->cus_email)->first();
+            if($customers){
+            return response()->json([
+                   'status' => 400,
+                  'message' => "Ya existe este usuario",
+            ],400);
+            }
             $customer = new Customer();
-            $customer = $customer->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+            if($request->cus_photo == 'defaultAvatar.jpg'){
+                $theImage = 'defaultAvatar.jpg';
+            }else{
+                $theImage = Customer::setImage($request->cus_photo, $request->cus_email);
+            }
+            if($request->cus_color_preference){
+                $color = $request->cus_color_preference;
+            }else{
+            $color = '#8265a7';
+            }
+
+
+            $customer = $customer->create(array_merge($request->all(), ['sal_id' => $sal_id], ['cus_photo' => $theImage], ['cus_color_preference' => $color]));
 
             DB::commit();
             return response()->json([
@@ -104,10 +123,18 @@ class CustomerController extends Controller
     public function update(Request $request, $cus_id)
     {
         try {
+        var_dump($request->cus_name);
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
             $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
-            $customer->update(array_merge($request->all(), ['sal_id' => $sal_id]));
+            if($request->cus_photo == $customer->cus_photo){
+                 $theImage = $customer->cus_photo;
+            }else{
+                 Customer::deleteImagen($customer->cus_photo);
+                 $theImage = Customer::setImage($request->cus_photo, $request->cus_email);
+            }
+
+            $customer->update(array_merge($request->all(), ['sal_id' => $sal_id], ['cus_photo' => $theImage]));
             DB::commit();
             return response()->json([
                 'status' => 200,
