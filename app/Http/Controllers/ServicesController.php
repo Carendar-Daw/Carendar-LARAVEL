@@ -166,4 +166,23 @@ class ServicesController extends Controller
             ]);
         }
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function listServicesByAppointment(Request $request, $ser_id): JsonResponse
+    {
+        $services = DB::table('services')
+            ->join('services__by__appointments','services.ser_id','=','services__by__appointments.ser_id')
+            ->select('services.*')
+            ->where('services.ser_id',$ser_id)
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'services' => $services,
+
+        ]);
+    }
 }

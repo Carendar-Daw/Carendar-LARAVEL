@@ -20,13 +20,17 @@ class AppointmentController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $appointment = Appointment::where('sal_id', $sal_id)->get();
-            $customer = Customer::where('sal_id', $sal_id)->get();
+            // $appointment = Appointment::where('sal_id', $sal_id)->get();
+            $appointment = DB::table('appointments')
+                ->join('customers','appointments.cus_id','=','customers.cus_id')
+                ->leftjoin('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
+                ->leftjoin('services', 'services.ser_id','=','services__by__appointments.ser_id')
+                ->select('appointments.*','cus_name','services__by__appointments.*','services.ser_description','services.ser_time')
+                ->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'appointments' => $appointment,
-                 'customers' => $customer
             ]);
         } catch (Exception $e) {
             return response()->json([
