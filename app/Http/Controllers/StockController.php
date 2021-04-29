@@ -55,7 +55,7 @@ class StockController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 500,
-                'message' => "Error at creating services",
+                'message' => "Error at creating stock",
                 'data' => [
                     'error' => $e->getMessage()
                 ]
@@ -70,7 +70,7 @@ class StockController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Services  $services
+     * @param  Stock  $stock
      * @return JsonResponse
      */
     public function update(Request $request, $ser_id)
