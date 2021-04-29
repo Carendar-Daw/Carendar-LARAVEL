@@ -46,7 +46,7 @@ class AppointmentController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $appointment = Appointment::where('cus_id',$cus_id)->where('sal_id', $sal_id)->get();
+            $appointment = Appointment::where('cus_id',$cus_id)->where('sal_id', $sal_id)->limit(10)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",

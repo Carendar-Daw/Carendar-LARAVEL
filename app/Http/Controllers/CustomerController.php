@@ -123,7 +123,7 @@ class CustomerController extends Controller
     public function update(Request $request, $cus_id)
     {
         try {
-        var_dump($request->cus_name);
+
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
             $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
