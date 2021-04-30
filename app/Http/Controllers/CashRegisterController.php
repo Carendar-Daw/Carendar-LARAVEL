@@ -12,15 +12,24 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cashRegister = Cash_Register::all();
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'cashRegister' => $cashRegister,
-  
-        ]);  
+        try {
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->get();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'cashRegister' => $cashRegister,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ]);
+        }
+
     }
 
     /**
@@ -28,7 +37,7 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         try {
             DB::beginTransaction();
