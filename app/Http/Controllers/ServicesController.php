@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Services_By_Appointment;
 use Exception;
 use App\Models\Services;
 use Illuminate\Http\Request;
@@ -129,6 +130,31 @@ class ServicesController extends Controller
         }
 
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function listServiceByAppointment($app_id)
+    {
+        try {
+            $services = Services_By_Appointment::all()->where('app_id',$app_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'service' => $services,
+
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+
+            ]);
+        }
+
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -165,24 +191,5 @@ class ServicesController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function listServicesByAppointment(Request $request, $ser_id): JsonResponse
-    {
-        $services = DB::table('services')
-            ->join('services__by__appointments','services.ser_id','=','services__by__appointments.ser_id')
-            ->select('services.*')
-            ->where('services.ser_id',$ser_id)
-            ->get();
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'services' => $services,
-
-        ]);
     }
 }
