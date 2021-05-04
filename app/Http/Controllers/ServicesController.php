@@ -106,7 +106,7 @@ class ServicesController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexService($sto_id)
+    public function indexService($sal_id)
     {
         try {
             $sal_id = $request->get('sal_id');
