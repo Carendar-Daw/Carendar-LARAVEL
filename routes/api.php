@@ -52,7 +52,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::post('stock', [StockController::class, 'create']);
     Route::put('stock/{sto_id}', [StockController::class, 'update']);
     Route::delete('stock/{sto_id}', [StockController::class, 'destroy']);
-    Route::get('appointment/services/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);
+    Route::get('stock/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);
 
     //Language Endpoints
     Route::get('language', [LanguageController::class, 'index']);
