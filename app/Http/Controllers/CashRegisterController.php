@@ -121,7 +121,7 @@ class CashRegisterController extends Controller
      * @param  \App\Models\Cash_Register  $cashRegister
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cash_Register $cashRegister)
+    public function destroy(Cash_Register $cashRegister, $sal_id)
     {
         try {
              DB::beginTransaction();

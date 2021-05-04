@@ -28,7 +28,7 @@ class LanguageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         try {
             DB::beginTransaction();
@@ -120,7 +120,7 @@ class LanguageController extends Controller
      * @param  \App\Models\Language  $language
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Language $language)
+    public function destroy(Request $request, $sal_id)
     {
         try {
              DB::beginTransaction();
