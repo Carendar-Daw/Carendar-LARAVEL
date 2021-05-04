@@ -51,7 +51,7 @@ class ToursController extends Controller
                 'message' => "Error at creating tours",
                 'error' => $e->getMessage()
           
-            ]);
+            ],500);
         }
     }
 
@@ -80,7 +80,7 @@ class ToursController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
 
@@ -111,7 +111,7 @@ class ToursController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -143,7 +143,7 @@ class ToursController extends Controller
                     'data' => [
                         'error' => $e->getMessage(),
                     ]
-                ]);
+                ],500);
             }
         }
     }

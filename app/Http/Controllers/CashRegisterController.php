@@ -27,7 +27,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -61,7 +61,7 @@ class CashRegisterController extends Controller
                 'message' => "Error at creating cashRegister",
                 'error' => $e->getMessage()
           
-            ]);
+            ],500);
         }
     }
     
@@ -80,7 +80,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                     'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -110,7 +110,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -121,7 +121,7 @@ class CashRegisterController extends Controller
      * @param  \App\Models\Cash_Register  $cashRegister
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cash_Register $cashRegister)
+    public function destroy(Cash_Register $cashRegister, $sal_id)
     {
         try {
              DB::beginTransaction();
@@ -139,7 +139,7 @@ class CashRegisterController extends Controller
                  'status' => 500,
                  'message' => "Error",
                  'error' => $e->getMessage(),
-             ]);
+             ],500);
          }
      }
     

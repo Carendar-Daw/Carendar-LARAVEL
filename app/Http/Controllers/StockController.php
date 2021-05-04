@@ -56,7 +56,7 @@ class StockController extends Controller
                 'status' => 500,
                 'message' => "Error at creating stock",
                 'error' => $e->getMessage()
-            ]);
+            ],500);
         }
 
     }
@@ -123,7 +123,7 @@ class StockController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -161,7 +161,7 @@ class StockController extends Controller
                  'status' => 500,
                  'message' => "Error",
                  'error' => $e->getMessage(),
-             ]);
+             ],500);
          }
      }
     /**
@@ -169,19 +169,25 @@ class StockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function listStockByServicesByAppointment(Request $request, $sto_id): JsonResponse
-    {
-        $stock = DB::table('stocks')
-            ->join('stock__by__services__appointments','stocks.sto_id','=','stock__by__services__appointments.sto_id')
-            ->select('stocks.*')
-            ->where('stocks.sto_id',$sto_id)
-            ->get();
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'stock' => $stock,
+    public function listStockByServicesByAppointment($sto_id)
+        {
+        try {
+            $stock = Stock_By_Services_Appointment::all()->where('sto_id',$sto_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'stock' => $stock,
 
-        ]);
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+
+            ],500);
+        }
+
     }
 
 }
