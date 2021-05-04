@@ -56,7 +56,7 @@ class StockController extends Controller
                 'status' => 500,
                 'message' => "Error at creating stock",
                 'error' => $e->getMessage()
-            ]);
+            ],500);
         }
 
     }
@@ -123,7 +123,7 @@ class StockController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -161,7 +161,7 @@ class StockController extends Controller
                  'status' => 500,
                  'message' => "Error",
                  'error' => $e->getMessage(),
-             ]);
+             ],500);
          }
      }
     /**
@@ -185,7 +185,7 @@ class StockController extends Controller
                 'message' => "Error",
                 'error' => $e->getMessage(),
 
-            ]);
+            ],500);
         }
 
     }

@@ -40,7 +40,7 @@ class AppointmentController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -66,7 +66,7 @@ class AppointmentController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -125,7 +125,7 @@ class AppointmentController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
 
@@ -156,7 +156,7 @@ class AppointmentController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
     /**
@@ -185,7 +185,7 @@ class AppointmentController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 }

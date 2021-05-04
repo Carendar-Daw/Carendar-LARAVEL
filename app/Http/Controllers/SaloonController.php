@@ -77,7 +77,7 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage()
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -112,7 +112,7 @@ class SaloonController extends Controller
                     'status' => 500,
                     'message' => "No se encontró un salón con id: " . $sal_id,
                     'data' => []
-                ]);
+                ],500);
 
         } catch (Exception $e) {
             return response()->json([
@@ -121,7 +121,7 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -148,7 +148,7 @@ class SaloonController extends Controller
               'data' => [
               'saloon' => $saloon,
                 ]
-              ]);
+              ],500);
             }
 
         }catch (Exception $e){
@@ -159,7 +159,7 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
 

@@ -27,7 +27,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -61,7 +61,7 @@ class CashRegisterController extends Controller
                 'message' => "Error at creating cashRegister",
                 'error' => $e->getMessage()
           
-            ]);
+            ],500);
         }
     }
     
@@ -80,7 +80,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                     'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -110,7 +110,7 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -139,7 +139,7 @@ class CashRegisterController extends Controller
                  'status' => 500,
                  'message' => "Error",
                  'error' => $e->getMessage(),
-             ]);
+             ],500);
          }
      }
     
