@@ -26,7 +26,6 @@ class ServicesController extends Controller
             'status' => 200,
             'message' => "Exitoso",
             'services' => $services,
-
         ]);
     }
 
@@ -52,7 +51,6 @@ class ServicesController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'services' => $services,
-
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -60,7 +58,6 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error at creating services",
                 'error' => $e->getMessage()
-
             ]);
         }
 

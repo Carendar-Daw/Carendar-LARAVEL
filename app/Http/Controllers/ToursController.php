@@ -14,72 +14,137 @@ class ToursController extends Controller
      */
     public function index()
     {
-        //
+        $tours = Tours::all();
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'tours' => $tours,
+  
+        ]);  
     }
-
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+           
+   
+                $tours = new Tours;
+                $tours = $tours->create($request->all());
+          
+           
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'tours' => $tours,
+  
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error at creating tours",
+                'error' => $e->getMessage()
+          
+            ]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tours  $tours
+     * @param  $sal_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Tours $tours)
+    public function show($sal_id)
     {
-        //
-    }
+        try {
+            $sal_id = $request->get('sal_id');
+            $tours = Tours::where('sal_id', $sal_id)->first();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'tours' => $tours,
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tours  $tours
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tours $tours)
-    {
-        //
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tours  $tours
+     * @param   $sal_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tours $tours)
+    public function update(Request $request, $sal_id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+            $tours = Tours::where('sal_id', $sal_id)->first();
+            $tours->sal_id = $sal_id;
+            $tours->update(array_merge($request->all(), ['sal_id' => $sal_id]));
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'tours' => $tours,
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tours  $tours
+     * @param  $sal_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tours $tours)
+    public function destroy(Request $request, $sal_id)
     {
-        //
+        {
+            try {
+                DB::beginTransaction();
+                $sal_id = $request->get('sal_id');
+                $tours = Tours::where('sal_id', $sal_id)->first();
+                $tours->delete();
+                DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'tours' => $tours,
+                ]);
+            }catch (Exception $e){
+                DB::rollBack();
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Error",
+                    'data' => [
+                        'error' => $e->getMessage(),
+                    ]
+                ]);
+            }
+        }
     }
 }
