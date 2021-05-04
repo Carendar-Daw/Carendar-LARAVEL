@@ -4,10 +4,14 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\CashRegisterController;
+use App\Http\Controllers\ToursController;
+use App\Http\Controllers\SaloonController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\SaloonController;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -48,7 +52,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::post('stock', [StockController::class, 'create']);
     Route::put('stock/{sto_id}', [StockController::class, 'update']);
     Route::delete('stock/{sto_id}', [StockController::class, 'destroy']);
-    Route::get('appointment/services/{sto_id}', [ServicesController::class, 'listStockByServicesByAppointment']);
+    Route::get('appointment/services/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);
 
     //Language Endpoints
     Route::get('language', [LanguageController::class, 'index']);
