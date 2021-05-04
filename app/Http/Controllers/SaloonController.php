@@ -103,9 +103,7 @@ class SaloonController extends Controller
                 response()->json([
                     'status' => 200,
                     'message' => "Exitoso",
-                    'data' => [
-                        'saloon' => $saloon,
-                    ]
+                    'saloon' => $saloon,
                 ])
                 :
                 response()->json([
