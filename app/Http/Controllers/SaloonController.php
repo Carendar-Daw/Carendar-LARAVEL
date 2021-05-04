@@ -18,17 +18,29 @@ class SaloonController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index($id_auth): JsonResponse
     {
-        $saloons = Saloon::all();
+        $saloons = Saloon::where('auth0_id', $id_auth)->first();
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
-            'data' => [
-                'saloons' => $saloons,
-            ]
+            'saloons' => $saloons,
         ]);
     }
+
+    public function checkIfSaloonExists($id_auth, $request)
+        {
+
+            if(Saloon::where('auth0_id', $id_auth)->exists()){
+              $saloons = Saloon::where('auth0_id', $id_auth)->first();
+              return $saloons;
+            }else{
+               $saloon = new Saloon;
+               $saloon = $saloon->create($request->all());
+               return $saloon;
+            }
+
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -39,24 +51,23 @@ class SaloonController extends Controller
     {
         try {
             DB::beginTransaction();
+
            if (Saloon::where('auth0_id', $request->auth0_id)->exists()) {
+            $saloons = Saloon::where('auth0_id', $request->auth0_id)->first();
             return response()->json([
                 'status' => 400,
                 'message' => "Ya hay un saloon con estas credenciales",
+                'saloon' => $saloons,
             ]);
            }else{
                 $saloon = new Saloon;
                 $saloon = $saloon->create($request->all());
            }
-           
             DB::commit();
-            $this->sendWelcomeEmail();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloons' => $saloon,
-                ]
+                 'saloons' => $saloon,
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -82,11 +93,12 @@ class SaloonController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function show($sal_id)
+    public function show(Request $request)
     {
         try {
-            $saloon = Saloon::find($sal_id);
 
+            $sal_id = $request->get('sal_id');
+             $saloon = Saloon::find($sal_id);
             return ($saloon !== null) ?
                 response()->json([
                     'status' => 200,
@@ -122,20 +134,23 @@ class SaloonController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
-            $saloon = Saloon::find($sal_id);
+            $sal_id = $request->get('sal_id');
+            if($saloon = Saloon::where('sal_id', $sal_id)->first()){
             $saloon->update($request->all());
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $saloon,
+             DB::commit();
+             return response()->json([
+              'status' => 200,
+              'message' => "Exitoso",
+              'data' => [
+              'saloon' => $saloon,
                 ]
-            ]);
+              ]);
+            }
+
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([

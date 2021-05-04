@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Customer;
+use App\Models\Services_By_Appointment;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,24 +17,29 @@ class AppointmentController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexSaloon($sal_id)
+    public function index (Request $request)
     {
         try {
-            $appointment = Appointment::all()->where('sal_id',$sal_id);
+            $sal_id = $request->get('sal_id');
+            // $appointment = Appointment::where('sal_id', $sal_id)->get();
+            $appointment = DB::table('appointments')
+                ->select('appointments.*','cus_name','services__by__appointments.*','services.ser_description',DB::raw("SUM(services.ser_time) as app_time"))
+                ->join('customers','appointments.cus_id','=','customers.cus_id')
+                ->leftjoin('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
+                ->leftjoin('services', 'services.ser_id','=','services__by__appointments.ser_id')
+                ->where('appointments.sal_id',$sal_id)
+                ->groupBy('appointments.app_id')
+                ->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointments' => $appointment,
-                ]
+                'appointments' => $appointment,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -42,16 +49,15 @@ class AppointmentController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexCustomer($cus_id)
+    public function indexAppointmentByCustomer(Request $request, $cus_id)
     {
         try {
-            $appointment = Appointment::all()->where('cus_id',$cus_id);
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('cus_id',$cus_id)->where('sal_id', $sal_id)->limit(10)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointments' => $appointment,
-                ]
+                 'appointments' => $appointment,
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -65,33 +71,6 @@ class AppointmentController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param $app_id
-     * @return JsonResponse
-     */
-    public function show($app_id)
-    {
-        try {
-            $appointment = Appointment::find($app_id);
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'data' => [
-                    'appointment' => $appointment,
-                ]
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 500,
-                'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
-            ]);
-        }
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -103,23 +82,40 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+            $app_date=$request->get('app_date');
+            $app_state=$request->get('app_state');
+            $cus_id=$request->get('cus_id');
+
+            $app_services = $request->get('app_services');
+
             $appointment = new Appointment();
-            $appointment = $appointment->create($request->all());
-            /*
-            $customer->cus_email = $request->cus_email;
-            $customer->cus_color_preference = $request->cus_color_preference;
-            $customer->cus_name = $request->cus_name;
-            $customer->cus_born_date = $request->cus_born_date;
-            $customer->cus_phone = $request->cus_phone;
-            $customer->save();
-            */
+            $appointment->sal_id = $sal_id;
+
+            $services_by_appointments = new Services_By_Appointment();
+
+
+
+
+            // $appointment = $appointment->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+            $appointment = $appointment->create([
+                'app_date'=>$app_date,
+                'app_state'=>$app_state,
+                'cus_id'=>$cus_id,
+                'sal_id' => $sal_id
+                ]);
+
+            foreach ($app_services as $service){
+                $services_by_appointments->create([
+                    'app_id' => $appointment->app_id,
+                    'ser_id' => $service['key']
+                ]);
+            }
+
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'saloon' => $appointment,
-                ]
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -144,27 +140,52 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $appointment = Appointment::find($app_id);
-            $appointment->update($request->all());
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
+            $appointment->sal_id = $sal_id;
+            $appointment->update(array_merge($request->all(), ['sal_id' => $sal_id]));
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                'data' => [
-                    'appointment' => $appointment,
-                ]
+                'appointment' => $appointment,
             ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
+                'error' => $e->getMessage(),
             ]);
         }
-
-
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $sal_id
+     * @return JsonResponse
+     */
+    public function delete(Request $request, $app_id)
+    {
+        try {
+            DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
+            $appointment->delete();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'appointment' => $appointment,
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
