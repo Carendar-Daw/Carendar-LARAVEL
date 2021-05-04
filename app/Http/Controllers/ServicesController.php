@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Services_By_Appointment;
 use Exception;
 use App\Models\Services;
 use Illuminate\Http\Request;
@@ -25,7 +26,6 @@ class ServicesController extends Controller
             'status' => 200,
             'message' => "Exitoso",
             'services' => $services,
-
         ]);
     }
 
@@ -51,7 +51,6 @@ class ServicesController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'services' => $services,
-
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -59,7 +58,6 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error at creating services",
                 'error' => $e->getMessage()
-
             ]);
         }
 
@@ -113,6 +111,31 @@ class ServicesController extends Controller
         try {
             $sal_id = $request->get('sal_id');
             $services = Services::all()->where('sal_id',$sal_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'service' => $services,
+
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+
+            ]);
+        }
+
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function listServiceByAppointment($app_id)
+    {
+        try {
+            $services = Services_By_Appointment::all()->where('app_id',$app_id);
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",

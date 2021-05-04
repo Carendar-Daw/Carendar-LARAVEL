@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Customer;
+use App\Models\Services_By_Appointment;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,13 +21,19 @@ class AppointmentController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $appointment = Appointment::where('sal_id', $sal_id)->get();
-            $customer = Customer::where('sal_id', $sal_id)->get();
+            // $appointment = Appointment::where('sal_id', $sal_id)->get();
+            $appointment = DB::table('appointments')
+                ->select('appointments.*','cus_name','services__by__appointments.*','services.ser_description',DB::raw("SUM(services.ser_time) as app_time"))
+                ->join('customers','appointments.cus_id','=','customers.cus_id')
+                ->leftjoin('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
+                ->leftjoin('services', 'services.ser_id','=','services__by__appointments.ser_id')
+                ->where('appointments.sal_id',$sal_id)
+                ->groupBy('appointments.app_id')
+                ->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'appointments' => $appointment,
-                 'customers' => $customer
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -64,33 +71,6 @@ class AppointmentController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param $app_id
-     * @return JsonResponse
-     */
-    public function show(Request $request, $app_id)
-    {
-        try {
-            $sal_id = $request->get('sal_id');
-            $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'appointment' => $appointment,
-
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 500,
-                'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
-            ]);
-        }
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -103,16 +83,39 @@ class AppointmentController extends Controller
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
+            $app_date=$request->get('app_date');
+            $app_state=$request->get('app_state');
+            $cus_id=$request->get('cus_id');
+
+            $app_services = $request->get('app_services');
+
             $appointment = new Appointment();
             $appointment->sal_id = $sal_id;
-            $appointment = $appointment->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+
+            $services_by_appointments = new Services_By_Appointment();
+
+
+
+
+            // $appointment = $appointment->create(array_merge($request->all(), ['sal_id' => $sal_id]));
+            $appointment = $appointment->create([
+                'app_date'=>$app_date,
+                'app_state'=>$app_state,
+                'cus_id'=>$cus_id,
+                'sal_id' => $sal_id
+                ]);
+
+            foreach ($app_services as $service){
+                $services_by_appointments->create([
+                    'app_id' => $appointment->app_id,
+                    'ser_id' => $service['key']
+                ]);
+            }
 
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                 'appointment' => $appointment,
-
             ]);
         } catch (Exception $e) {
             DB::rollBack();

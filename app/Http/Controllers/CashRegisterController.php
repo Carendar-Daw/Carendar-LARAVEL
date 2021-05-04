@@ -12,9 +12,24 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->get();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'cashRegister' => $cashRegister,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ]);
+        }
+
     }
 
     /**
@@ -22,64 +37,111 @@ class CashRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+           
+   
+                $cashRegister = new CashRegister;
+                $cashRegister = $cashRegister->create($request->all());
+          
+           
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'cashRegister' => $cashRegister,
+  
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error at creating cashRegister",
+                'error' => $e->getMessage()
+          
+            ]);
+        }
+    }
+    
+    public function indexCashRegister($sal_id)
+    {
+        try {
+            $cashRegister = Cash_Register::all()->where('$sal_id',$sal_id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                    'cashRegister' => $cashRegister,
+                
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                    'error' => $e->getMessage(),
+            ]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cash_Register  $cash_Register
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cash_Register $cash_Register)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cash_Register  $cash_Register
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cash_Register $cash_Register)
-    {
-        //
-    }
-
-    /**
+  /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cash_Register  $cash_Register
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param $sal_id
+     * @return JsonResponse
      */
-    public function update(Request $request, Cash_Register $cash_Register)
+    public function update(Request $request, $sal_id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $cashRegister = Cash_Register::find($sal_id);
+            $cashRegister->update($request->all());
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'cashRegister' => $cashRegister,
+   
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
-    /**
+
+/**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cash_Register  $cash_Register
+     * @param  \App\Models\Cash_Register  $cashRegister
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cash_Register $cash_Register)
+    public function destroy(Cash_Register $cashRegister)
     {
-        //
-    }
+        try {
+             DB::beginTransaction();
+             $cashRegister = Cash_Register::find($sal_id);
+             $cashRegister->delete();
+             DB::commit();
+             return response()->json([
+                 'status' => 200,
+                 'message' => "Exitoso cashRegister delete",
+ 
+             ]);
+         }catch (Exception $e){
+             DB::rollBack();
+             return response()->json([
+                 'status' => 500,
+                 'message' => "Error",
+                 'error' => $e->getMessage(),
+             ]);
+         }
+     }
+    
+    
 }
