@@ -58,7 +58,7 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error at creating services",
                 'error' => $e->getMessage()
-            ]);
+            ],500);
         }
 
     }
@@ -123,7 +123,7 @@ class ServicesController extends Controller
                 'message' => "Error",
                 'error' => $e->getMessage(),
 
-            ]);
+            ],500);
         }
 
     }
@@ -148,7 +148,7 @@ class ServicesController extends Controller
                 'message' => "Error",
                 'error' => $e->getMessage(),
 
-            ]);
+            ],500);
         }
 
     }
@@ -172,7 +172,7 @@ class ServicesController extends Controller
                 return response()->json([
                       'status' => 400,
                       'message' => "No tienes este servicio",
-                      ]);
+                      ],400);
             }
 
             DB::commit();
@@ -186,7 +186,7 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 }

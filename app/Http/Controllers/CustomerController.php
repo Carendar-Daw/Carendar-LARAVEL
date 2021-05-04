@@ -31,7 +31,7 @@ class CustomerController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -57,7 +57,7 @@ class CustomerController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 //https://eu.ui-avatars.com/api/?name=Alvaro+Arcal&background=0D8ABC&color=fff
@@ -109,7 +109,7 @@ class CustomerController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
 
@@ -149,7 +149,7 @@ class CustomerController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
      public function destroy(Request $request, $cus_id)
@@ -173,7 +173,7 @@ class CustomerController extends Controller
                     'data' => [
                         'error' => $e->getMessage(),
                     ]
-                ]);
+                ],500);
             }
         }
 }

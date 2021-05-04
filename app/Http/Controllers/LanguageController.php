@@ -14,13 +14,21 @@ class LanguageController extends Controller
      */
     public function index()
     {
+        try{
         $language = Language::all();
         return response()->json([
             'status' => 200,
             'message' => "Exitoso",
             'language' => $language,
   
-        ]);    //
+        ]);  
+    } catch (Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => "Error",
+            'error' => $e->getMessage(),
+        ],500);
+    }
     }
 
     /**
@@ -57,7 +65,7 @@ class LanguageController extends Controller
                 'message' => "Error at creating language",
                 'error' => $e->getMessage()
           
-            ]);
+            ],500);
         }
 
     }
@@ -76,7 +84,7 @@ class LanguageController extends Controller
                 'status' => 500,
                 'message' => "Error",
                     'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -106,7 +114,7 @@ class LanguageController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
 
