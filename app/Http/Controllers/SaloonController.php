@@ -146,7 +146,7 @@ class SaloonController extends Controller
               'data' => [
               'saloon' => $saloon,
                 ]
-              ],500);
+              ]);
             }
 
         }catch (Exception $e){
