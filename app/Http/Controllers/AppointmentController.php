@@ -108,7 +108,7 @@ class AppointmentController extends Controller
             foreach ($app_services as $service){
                 $services_by_appointments->create([
                     'app_id' => $appointment->app_id,
-                    'ser_id' => $service['key']
+                    'ser_id' => $service
                 ]);
             }
 
@@ -159,10 +159,13 @@ class AppointmentController extends Controller
             // Services_By_Appointment::where('app_id',$app_id);
             $services_by_appointments = new Services_By_Appointment();
 
+            $sba = Services_By_Appointment::where('app_id',$app_id);
+            $sba->delete();
+
                 foreach ($app_services as $service){
                     $services_by_appointments->create([
                         'app_id' => $appointment->app_id,
-                        'ser_id' => $service['key']
+                        'ser_id' => $service
                     ]);
                 }
 
