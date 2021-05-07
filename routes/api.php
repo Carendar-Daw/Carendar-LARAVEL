@@ -12,7 +12,6 @@ use App\Http\Controllers\SaloonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -37,7 +36,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
     Route::delete('appointment/{app_id}', [AppointmentController::class, 'delete']);
-    
+
     // Services Endpoints
     Route::get('services', [ServicesController::class, 'index']);
     Route::get('services/{app_id}', [ServicesController::class, 'listServiceByAppointment']);
@@ -51,29 +50,27 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::post('stock', [StockController::class, 'create']);
     Route::put('stock/{sto_id}', [StockController::class, 'update']);
     Route::delete('stock/{sto_id}', [StockController::class, 'destroy']);
-    /*Route::get('stock/service/appointment/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);*/
+    /*Route::get('stock/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);*/
 
     //Language Endpoints
     Route::get('language', [LanguageController::class, 'index']);
     Route::get('language/{sal_id}', [LanguageController::class, 'indexLanguage']);
     Route::post('language', [LanguageController::class, 'create']);
     Route::put('language/{sal_id}', [LanguageController::class, 'update']);
-    Route::delete('language/{sal_id}', [LanguageController::class, 'destroy']); 
+    Route::delete('language/{sal_id}', [LanguageController::class, 'destroy']);
 
     //CashRegister Endpoints
     Route::get('cashregister', [CashRegisterController::class, 'index']);
     Route::get('cashregister/{sal_id}', [CashRegisterController::class, 'IndexCashRegister']);
     Route::post('cashregister', [CashRegisterController::class, 'create']);
     Route::put('cashregister/{sal_id}', [CashRegisterController::class, 'update']);
-    Route::delete('cashregister/{sal_id}', [CashRegisterController::class, 'destroy']); 
+    Route::delete('cashregister/{sal_id}', [CashRegisterController::class, 'destroy']);
 
-    //Tours Endpoints 
+    //Tours Endpoints
     Route::get('tours', [ToursController::class, 'index']);
-    Route::get('tours/{sal_id}', [ToursController::class, 'show']);
     Route::post('tours', [ToursController::class, 'create']);
     Route::put('tours/{sal_id}', [ToursController::class, 'update']);
-    Route::delete('tours/{sal_id}', [ToursController::class, 'destroy']); 
-
+    Route::delete('tours/{sal_id}', [ToursController::class, 'destroy']);
 });
 
 // This endpoint does not need authentication.
