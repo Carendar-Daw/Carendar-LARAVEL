@@ -28,18 +28,21 @@ class SaloonController extends Controller
         ]);
     }
 
-    public function checkIfSaloonExists($id_auth, $request)
+    public function checkIfSaloonExistsAuth($id_auth, $request)
         {
-
             if(Saloon::where('auth0_id', $id_auth)->exists()){
               $saloons = Saloon::where('auth0_id', $id_auth)->first();
               return $saloons;
+            }else if(Saloon::where('sal_email', $request->sal_email)->exists()){
+             $saloons = Saloon::where('sal_email', $request->sal_email)->first();
+             $saloons->auth0_id = $id_auth;
+             $saloons->save();
+             return $saloons;
             }else{
                $saloon = new Saloon;
                $saloon = $saloon->create($request->all());
                return $saloon;
             }
-
         }
 
     /**
@@ -51,9 +54,9 @@ class SaloonController extends Controller
     {
         try {
             DB::beginTransaction();
-
-           if (Saloon::where('auth0_id', $request->auth0_id)->exists()) {
-            $saloons = Saloon::where('auth0_id', $request->auth0_id)->first();
+            $sal_id = $request->get('sal_id');
+           if (Saloon::where('sal_id', $sal_id)->exists()) {
+            $saloons = Saloon::where('sal_id', $sal_id)->first();
             return response()->json([
                 'status' => 400,
                 'message' => "Ya hay un saloon con estas credenciales",
@@ -146,7 +149,7 @@ class SaloonController extends Controller
               'data' => [
               'saloon' => $saloon,
                 ]
-              ],500);
+              ]);
             }
 
         }catch (Exception $e){

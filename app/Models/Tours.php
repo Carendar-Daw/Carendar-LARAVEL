@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tours extends Model
 {
-    protected $primaryKey = 'sal_id';
+    protected $primaryKey = 'tour_id';
     use HasFactory;
     protected $guarded = [];
 }

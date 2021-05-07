@@ -69,8 +69,8 @@ Route::group(['middleware' => 'jwt:api'], function () {
     //Tours Endpoints
     Route::get('tours', [ToursController::class, 'index']);
     Route::post('tours', [ToursController::class, 'create']);
-    Route::put('tours/{sal_id}', [ToursController::class, 'update']);
-    Route::delete('tours/{sal_id}', [ToursController::class, 'destroy']);
+    Route::put('tours', [ToursController::class, 'update']);
+    Route::delete('tours', [ToursController::class, 'destroy']);
 });
 
 // This endpoint does not need authentication.
