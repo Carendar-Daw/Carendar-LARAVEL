@@ -100,33 +100,7 @@ class StockController extends Controller
             ],500);
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
-     */
-    public function indexStock($sto_id)
-    {
-        try {
-            $stock = Stock::all()->where('$sto_id',$sto_id);
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'data' => [
-                    'stock' => $stock,
-                ]
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 500,
-                'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
-            ],500);
-        }
 
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -164,11 +138,14 @@ class StockController extends Controller
              ],500);
          }
      }
-    /**
+    
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+     /*
     public function listStockByServicesByAppointment($sto_id)
         {
         try {
@@ -189,5 +166,5 @@ class StockController extends Controller
         }
 
     }
-
+*/
 }
