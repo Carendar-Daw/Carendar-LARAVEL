@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Language;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class LanguageController extends Controller
 {
@@ -72,7 +74,7 @@ class LanguageController extends Controller
     public function indexLanguage($sal_id)
     {
         try {
-            $language = Language::all()->where('$sal_id',$sal_id);
+            $language = Language::where('sal_id',$sal_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -95,19 +97,27 @@ class LanguageController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
-            $languages = Language::find($sal_id);
-            $languages->update($request->all());
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'languages' => $languages,
-   
-            ]);
+            $sal_id = $request->get('sal_id');
+            if(Language::where('sal_id', $sal_id)->exists()){
+             $languages = Language::where('sal_id', $sal_id)->first();
+             $languages->update($request->all());
+             DB::commit();
+                 return response()->json([
+                        'status' => 200,
+                        'message' => "Exitoso",
+                        'language' => $languages,
+                 ]);
+            }else{
+                 return response()->json([
+                        'status' => 400,
+                        'message' => "Error ningun language",
+                 ],400);
+            }
+
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
@@ -116,8 +126,6 @@ class LanguageController extends Controller
                 'error' => $e->getMessage(),
             ],500);
         }
-
-
     }
 
 
@@ -132,7 +140,8 @@ class LanguageController extends Controller
     {
         try {
              DB::beginTransaction();
-             $languages = Language::find($sal_id);
+             $sal_id = $request->get('sal_id');
+             $languages = Language::where('sal_id', $sal_id);
              $languages->delete();
              DB::commit();
              return response()->json([

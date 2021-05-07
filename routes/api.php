@@ -12,7 +12,6 @@ use App\Http\Controllers\SaloonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -48,11 +47,10 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     // Stocks Endpoints
     Route::get('stock', [StockController::class, 'index']);
-    Route::get('stock/{sto_id}', [StockController::class, 'indexStock']);
     Route::post('stock', [StockController::class, 'create']);
     Route::put('stock/{sto_id}', [StockController::class, 'update']);
     Route::delete('stock/{sto_id}', [StockController::class, 'destroy']);
-    Route::get('stock/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);
+    /*Route::get('stock/{sto_id}', [StockController::class, 'listStockByServicesByAppointment']);*/
 
     //Language Endpoints
     Route::get('language', [LanguageController::class, 'index']);
@@ -70,11 +68,9 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     //Tours Endpoints
     Route::get('tours', [ToursController::class, 'index']);
-    Route::get('tours/{sal_id}', [ToursController::class, 'show']);
     Route::post('tours', [ToursController::class, 'create']);
     Route::put('tours', [ToursController::class, 'update']);
-    Route::delete('tours/{sal_id}', [ToursController::class, 'destroy']);
-
+    Route::delete('tours', [ToursController::class, 'destroy']);
 });
 
 // This endpoint does not need authentication.
