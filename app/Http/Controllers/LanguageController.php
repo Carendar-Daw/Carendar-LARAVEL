@@ -102,16 +102,22 @@ class LanguageController extends Controller
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
-            $languages = Language::where('sal_id', $sal_id)->first();
+            if(Language::where('sal_id', $sal_id)->exists()){
+             $languages = Language::where('sal_id', $sal_id)->first();
+             $languages->update($request->all());
+             DB::commit();
+                 return response()->json([
+                        'status' => 200,
+                        'message' => "Exitoso",
+                        'language' => $languages,
+                 ]);
+            }else{
+                 return response()->json([
+                        'status' => 400,
+                        'message' => "Error ningun language",
+                 ],400);
+            }
 
-            $languages->update(array_merge($request->all(), ['sal_id' => $sal_id]));
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'languages' => $languages,
-   
-            ]);
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
@@ -120,8 +126,6 @@ class LanguageController extends Controller
                 'error' => $e->getMessage(),
             ],500);
         }
-
-
     }
 
 
