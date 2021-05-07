@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cash_Register;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
+
 
 class CashRegisterController extends Controller
 {
@@ -41,12 +44,17 @@ class CashRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
-           
+            if (Cash_Register::where('sal_id', $request->sal_id)->exists()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Ya hay una caja creada",
+                ]);
+               }else{
    
-                $cashRegister = new CashRegister;
+                $cashRegister = new Cash_Register;
                 $cashRegister = $cashRegister->create($request->all());
           
-           
+               }
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -68,11 +76,11 @@ class CashRegisterController extends Controller
     public function indexCashRegister($sal_id)
     {
         try {
-            $cashRegister = Cash_Register::all()->where('$sal_id',$sal_id);
+            $cashRegister = Cash_Register::where('sal_id',$sal_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
-                    'cashRegister' => $cashRegister,
+                'cashRegister' => $cashRegister,
                 
             ]);
         } catch (Exception $e) {

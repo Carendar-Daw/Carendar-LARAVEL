@@ -19,23 +19,23 @@ class ToursController extends Controller
     public function index(Request $request)
     {
         $sal_id = $request->get('sal_id');
-        if(Tours::where('sal_id', $sal_id)->exists()){
-        $theTour = Tours::where('sal_id', $sal_id)->first();
+        if (Tours::where('sal_id', $sal_id)->exists()) {
+            $theTour = Tours::where('sal_id', $sal_id)->first();
             return response()->json([
-               'status' => 200,
-               'message' => "Exitoso",
-               'tours' => $theTour,
+                'status' => 200,
+                'message' => "Exitoso",
+                'tours' => $theTour,
             ]);
-        }else{
+        } else {
             $tours = new Tours;
             $tours->sal_id = $sal_id;
             $theTour = $tours->save();
         }
-         return response()->json([
-           'status' => 200,
-           'message' => "Exitoso",
-           'tours' => $theTour,
-         ]);
+        return response()->json([
+            'status' => 200,
+            'message' => "Exitoso",
+            'tours' => $theTour,
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -46,11 +46,16 @@ class ToursController extends Controller
     {
         try {
             DB::beginTransaction();
-             $sal_id = $request->get('sal_id');
-
+            if (Tours::where('sal_id', $request->sal_id)->exists()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Ya hay un tour creado",
+                ]);
+            } else {
+                $sal_id = $request->get('sal_id');
                 $tours = new Tours;
                 $tours = $tours->create(array_merge($request->all(), ['sal_id' => $sal_id]));
-
+            }
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -65,36 +70,7 @@ class ToursController extends Controller
                 'message' => "Error at creating tours",
                 'error' => $e->getMessage()
 
-            ],500);
-        }
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  $sal_id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($sal_id)
-    {
-        try {
-            $sal_id = $request->get('sal_id');
-            $tours = Tours::where('sal_id', $sal_id)->first();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso",
-                'tours' => $tours,
-
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 500,
-                'message' => "Error",
-                'data' => [
-                    'error' => $e->getMessage(),
-                ]
-            ],500);
+            ], 500);
         }
     }
 
@@ -119,13 +95,13 @@ class ToursController extends Controller
                 'message' => "Exitoso",
                 'tours' => $tours,
             ]);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 
@@ -136,8 +112,7 @@ class ToursController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $sal_id)
-    {
-        {
+    { {
             try {
                 DB::beginTransaction();
                 $sal_id = $request->get('sal_id');
@@ -149,7 +124,7 @@ class ToursController extends Controller
                     'message' => "Exitoso",
                     'tours' => $tours,
                 ]);
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 500,
@@ -157,7 +132,7 @@ class ToursController extends Controller
                     'data' => [
                         'error' => $e->getMessage(),
                     ]
-                ],500);
+                ], 500);
             }
         }
     }
