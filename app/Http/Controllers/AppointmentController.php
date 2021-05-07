@@ -140,10 +140,33 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            $app_date=$request->get('app_date');
+            $app_state=$request->get('app_state');
+            $cus_id=$request->get('cus_id');
+
+            $app_services = $request->get('app_services');
+
             $sal_id = $request->get('sal_id');
             $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
-            $appointment->sal_id = $sal_id;
-            $appointment->update(array_merge($request->all(), ['sal_id' => $sal_id]));
+            $appointment->update([
+                'sal_id' => $sal_id,
+                'app_date'=>$app_date,
+                'app_state'=>$app_state,
+                'cus_id'=>$cus_id
+            ]);
+
+            // Services_By_Appointment::where('app_id',$app_id);
+            $services_by_appointments = new Services_By_Appointment();
+
+                foreach ($app_services as $service){
+                    $services_by_appointments->create([
+                        'app_id' => $appointment->app_id,
+                        'ser_id' => $service['key']
+                    ]);
+                }
+
+
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -153,8 +176,8 @@ class AppointmentController extends Controller
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
-                'status' => 500,
-                'message' => "Error",
+                'status' => $app_id,
+                'message' => $e->getLine(),
                 'error' => $e->getMessage(),
             ],500);
         }
