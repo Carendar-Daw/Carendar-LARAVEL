@@ -86,6 +86,8 @@ class AppointmentController extends Controller
             $app_date=$request->get('app_date');
             $app_state=$request->get('app_state');
             $cus_id=$request->get('cus_id');
+            $app_color=$request->get('app_color');
+
 
             $app_services = $request->get('app_services');
 
@@ -102,7 +104,8 @@ class AppointmentController extends Controller
                 'app_date'=>$app_date,
                 'app_state'=>$app_state,
                 'cus_id'=>$cus_id,
-                'sal_id' => $sal_id
+                'sal_id' => $sal_id,
+                'app_color'=>$app_color
                 ]);
 
             foreach ($app_services as $service){
@@ -144,6 +147,7 @@ class AppointmentController extends Controller
             $app_date=$request->get('app_date');
             $app_state=$request->get('app_state');
             $cus_id=$request->get('cus_id');
+            $app_color=$request->get('app_color');
 
             $app_services = $request->get('app_services');
 
@@ -153,7 +157,8 @@ class AppointmentController extends Controller
                 'sal_id' => $sal_id,
                 'app_date'=>$app_date,
                 'app_state'=>$app_state,
-                'cus_id'=>$cus_id
+                'cus_id'=>$cus_id,
+                'app_color'=>$app_color
             ]);
 
             // Services_By_Appointment::where('app_id',$app_id);

@@ -106,11 +106,10 @@ class ServicesController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexService($sal_id)
+   /* public function indexService($ser_id)
     {
         try {
-            $sal_id = $request->get('sal_id');
-            $services = Services::all()->where('sal_id',$sal_id);
+            $services = Services::where('ser_id',$ser_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -126,7 +125,7 @@ class ServicesController extends Controller
             ],500);
         }
 
-    }
+    }*/
     /**
      * Display a listing of the resource.
      *

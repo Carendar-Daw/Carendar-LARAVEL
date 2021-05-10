@@ -20,7 +20,7 @@ class CustomerController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $customers = Customer::where('sal_id', $sal_id)->get();
+            $customers = Customer::where('sal_id', $sal_id);
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -42,11 +42,10 @@ class CustomerController extends Controller
      * @param $cus_id
      * @return JsonResponse
      */
-    public function show(Request $request, $cus_id)
+    public function show($cus_id)
     {
         try {
-            $sal_id = $request->get('sal_id');
-            $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
+            $customer = Customer::where('cus_id',$cus_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
