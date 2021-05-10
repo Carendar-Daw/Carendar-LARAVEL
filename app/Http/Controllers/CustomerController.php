@@ -19,7 +19,8 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
-            $customers = Customer::all();
+            $sal_id = $request->get('sal_id');
+            $customers = Customer::where('sal_id', $sal_id);
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
