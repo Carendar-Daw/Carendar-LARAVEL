@@ -19,7 +19,7 @@ class StockController extends Controller
     {
 
         $sal_id = $request->get('sal_id');
-        $stock = Stock::where('sal_id', $sal_id)->get();       
+        $stock = Stock::where('sal_id', $sal_id)->get();
          return response()->json([
             'status' => 200,
             'message' => "Exitoso",
@@ -134,12 +134,12 @@ class StockController extends Controller
      * @param $sto_id
      * @return JsonResponse
      */
-    public function destroy($sto_id)
+    public function destroy(Request $request,$sto_id)
     {
         try {
              DB::beginTransaction();
               $sal_id = $request->get('sal_id');
- 
+
               if(Stock::where('sal_id', $sal_id)->where('sto_id', $sto_id)->exists()){
                  $stock = Stock::where('sal_id', $sal_id)->where('sto_id', $sto_id)->first();
                  $stock->delete();
@@ -149,7 +149,7 @@ class StockController extends Controller
                        'message' => "Error, no se encuentra el producto",
                        ]);
              }
- 
+
              DB::commit();
              return response()->json([
                  'status' => 200,

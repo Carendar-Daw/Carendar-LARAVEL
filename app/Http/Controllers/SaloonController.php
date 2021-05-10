@@ -162,9 +162,32 @@ class SaloonController extends Controller
                 ]
             ],500);
         }
-
-
     }
+/*
+      public function statistics(Request $request) {
 
+
+        try {
+            DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+
+             DB::commit();
+             return [
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'customers' => ,
+
+             ];
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+        ],500);
+      }
+*/
 
 }
