@@ -20,7 +20,7 @@ class CustomerController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $customers = Customer::where('sal_id', $sal_id);
+            $customers = Customer::where('sal_id', $sal_id)->get();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",

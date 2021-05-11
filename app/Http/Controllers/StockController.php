@@ -107,40 +107,6 @@ class StockController extends Controller
             ], 500);
         }
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $sto_id
-     * @return JsonResponse
-     */
-    public function destroy(Request $request, $sto_id)
-    {
-        try {
-            DB::beginTransaction();
-            $sal_id = $request->get('sal_id');
-            if (Stock::where('sal_id', $sal_id)->where('sto_id', $sto_id)->exists()) {
-                $stock = Stock::where('sal_id', $sal_id)->where('sto_id', $sto_id)->first();
-                $stock->delete();
-            } else {
-                return response()->json([
-                    'status' => 400,
-                    'message' => "Error, no se encuentra el producto",
-                ]);
-            }
-            DB::commit();
-            return response()->json([
-                'status' => 200,
-                'message' => "Exitoso stock delete",
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => 500,
-                'message' => "Error",
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
