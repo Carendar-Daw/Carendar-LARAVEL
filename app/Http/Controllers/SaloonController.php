@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMailable;
 use App\Models\Services_By_Appointment;
+use App\Models\Customer;
 use App\Models\Saloon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -179,12 +180,19 @@ class SaloonController extends Controller
                                                               ->orderBy('numTotal', 'desc')
                                                               ->limit(5)
                                                               ->get();
+
+            $customer = Customer::select(DB::raw('COUNT(customers.cus_id) as numTotal'))
+                                                                        ->where('customers.sal_id', '=', $sal_id)
+                                                                        ->whereBetween('customers.created_at', [$request->minTime, $request->maxTime])
+                                                                        ->first();
+
+
              DB::commit();
              return [
                     'status' => 200,
                     'message' => $request->body,
                     'servicesPie' => $servicesByAppointment,
-
+                    'customer' => $customer,
              ];
         }catch (Exception $e){
             DB::rollBack();
