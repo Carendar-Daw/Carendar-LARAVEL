@@ -81,6 +81,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::get('transaction', [TransactionController::class, 'list']);
     Route::post('transaction', [TransactionController::class, 'create']);
     Route::put('transaction/{tra_id}', [TransactionController::class, 'update']);
+    Route::delete('transaction/{tra_id}', [TransactionController::class, 'delete']);
 });
 
 

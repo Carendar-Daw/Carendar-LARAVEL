@@ -116,4 +116,33 @@ class TransactionController extends Controller
             ], 500);
         }
     }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $sal_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, $app_id)
+    {
+        try {
+            DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+            $transaction = Transaction::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
+            $transaction->delete();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'appointment' => $transaction,
+            ]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'error' => $e->getMessage(),
+            ],500);
+        }
+    }
 }
