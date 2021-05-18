@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMailable;
 use App\Models\Services_By_Appointment;
+use App\Models\Stock;
 use App\Models\Customer;
 use App\Models\Saloon;
 use Exception;
@@ -185,7 +186,10 @@ class SaloonController extends Controller
                                                                         ->where('customers.sal_id', '=', $sal_id)
                                                                         ->whereBetween('customers.created_at', [$request->minTime, $request->maxTime])
                                                                         ->first();
-
+            $products = Stock::select(DB::raw('SUM(stocks.sto_pvp) as Total'))
+                                                                        ->where('stocks.sal_id', '=', $sal_id)
+                                                                        ->whereBetween('stocks.created_at', [$request->minTime, $request->maxTime])
+                                                                        ->first();
 
              DB::commit();
              return [
@@ -193,6 +197,7 @@ class SaloonController extends Controller
                     'message' => $request->body,
                     'servicesPie' => $servicesByAppointment,
                     'customer' => $customer,
+                    'products' => $products,
              ];
         }catch (Exception $e){
             DB::rollBack();
