@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMailable;
+use App\Models\Services_By_Appointment;
+use App\Models\Customer;
 use App\Models\Saloon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -163,20 +165,34 @@ class SaloonController extends Controller
             ],500);
         }
     }
-/*
+
       public function statistics(Request $request) {
 
 
         try {
             DB::beginTransaction();
             $sal_id = $request->get('sal_id');
+            $servicesByAppointment = Services_By_Appointment::select('services.ser_id', 'services.ser_description', DB::raw('COUNT(services__by__appointments.ser_id) as numTotal'))
+                                                              ->join('services', 'services.ser_id', '=', 'services__by__appointments.ser_id')
+                                                              ->where('services.sal_id', '=', $sal_id)
+                                                              ->groupBy('services.ser_id')
+                                                              ->whereBetween('services__by__appointments.created_at', [$request->minTime, $request->maxTime])
+                                                              ->orderBy('numTotal', 'desc')
+                                                              ->limit(5)
+                                                              ->get();
+
+            $customer = Customer::select(DB::raw('COUNT(customers.cus_id) as numTotal'))
+                                                                        ->where('customers.sal_id', '=', $sal_id)
+                                                                        ->whereBetween('customers.created_at', [$request->minTime, $request->maxTime])
+                                                                        ->first();
+
 
              DB::commit();
              return [
                     'status' => 200,
-                    'message' => "Exitoso",
-                    'customers' => ,
-
+                    'message' => $request->body,
+                    'servicesPie' => $servicesByAppointment,
+                    'customer' => $customer,
              ];
         }catch (Exception $e){
             DB::rollBack();
@@ -188,6 +204,7 @@ class SaloonController extends Controller
                 ]
         ],500);
       }
-*/
+    }
+
 
 }
