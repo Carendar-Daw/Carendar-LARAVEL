@@ -188,4 +188,34 @@ class AppointmentController extends Controller
             ]);
         }
     }
+/**
+     * Display a listing of the resource.
+      * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCustomerByAppointmentsByDate(Request $request)
+    {
+    try {
+        $today = date('Y-m-d');
+        $tomorrow = strtotime ( '+1 day' , strtotime ( $today ) ) ;
+        $tomorrow = date ( 'Y-m-j' , $tomorrow ); 
+        $sal_id = $request->get('sal_id');
+
+        $appointment = DB::table('appointments')
+        ->select('appointments.','cus_name')
+        ->join('customers','appointments.cus_id','=','customers.cus_id')
+        ->where('appointments.sal_id',$sal_id)
+        ->whereBetween('appointments.app_date',[$today,$tomorrow])
+        ->get();
+
+        $arrayCustomers = null;
+        foreach ($appointment as $a) {
+            $arrayCustomers[]= $a->cus_id;
+            }
+
+        return $arrayCustomers;
+    } catch (Exception $e) {
+   return "f bro";
+    }
+}
 }
