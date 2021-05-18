@@ -70,7 +70,38 @@ class AppointmentController extends Controller
         }
 
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function indexAppointmentCash(Request $request)
+    {
+        try {
+            $sal_id = $request->get('sal_id');
+            $appointment = DB::table('appointments')
+                ->select('*')
+                ->join('customers','appointments.cus_id','=','customers.cus_id')
+                ->join('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
+                ->join('services', 'services.ser_id','=','services__by__appointments.ser_id')
+                ->where('appointments.sal_id',$sal_id)
+                ->get();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'appointments' => $appointment,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ],500);
+        }
 
+    }
 
     /**
      * Show the form for creating a new resource.
