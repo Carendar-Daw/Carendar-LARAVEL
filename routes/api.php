@@ -9,6 +9,7 @@ use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\ToursController;
 use App\Http\Controllers\SaloonController;
 
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,11 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     //Statistics Endpoints
     Route::post('statistics', [SaloonController::class, 'statistics']);
+
+    //Transactions Endpoints
+    Route::get('transaction', [TransactionController::class, 'list']);
+    Route::post('transaction', [TransactionController::class, 'create']);
+    Route::put('transaction/{tra_id}', [TransactionController::class, 'update']);
 });
 
 
