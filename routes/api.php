@@ -9,6 +9,7 @@ use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\ToursController;
 use App\Http\Controllers\SaloonController;
 
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     // Appointment Endpoints
     Route::get('appointment/saloon', [AppointmentController::class, 'index']);
     Route::get('appointment/customer/{cus_id}', [AppointmentController::class, 'indexAppointmentByCustomer']);
+    Route::get('appointment/cash', [AppointmentController::class, 'indexAppointmentCash']);
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
     Route::delete('appointment/{app_id}', [AppointmentController::class, 'delete']);
@@ -74,6 +76,12 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     //Statistics Endpoints
     Route::post('statistics', [SaloonController::class, 'statistics']);
+
+    //Transactions Endpoints
+    Route::get('transaction', [TransactionController::class, 'list']);
+    Route::post('transaction', [TransactionController::class, 'create']);
+    Route::put('transaction/{tra_id}', [TransactionController::class, 'update']);
+    Route::delete('transaction/{tra_id}', [TransactionController::class, 'delete']);
 });
 
 

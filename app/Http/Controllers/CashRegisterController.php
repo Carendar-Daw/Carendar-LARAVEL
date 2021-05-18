@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cash_Register;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class CashRegisterController extends Controller
     {
         try {
             $sal_id = $request->get('sal_id');
-            $cashRegister = Cash_Register::where('sal_id', $sal_id)->get();
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -44,23 +45,23 @@ class CashRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
-            if (Cash_Register::where('sal_id', $request->sal_id)->exists()) {
+            if (Cash_Register::where('sal_id', $request->sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->exists()) {
                 return response()->json([
                     'status' => 400,
                     'message' => "Ya hay una caja creada",
                 ]);
                }else{
-   
+
                 $cashRegister = new Cash_Register;
                 $cashRegister = $cashRegister->create($request->all());
-          
+
                }
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
-  
+
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -68,11 +69,11 @@ class CashRegisterController extends Controller
                 'status' => 500,
                 'message' => "Error at creating cashRegister",
                 'error' => $e->getMessage()
-          
+
             ],500);
         }
     }
-    
+
     public function indexCashRegister($sal_id)
     {
         try {
@@ -81,7 +82,7 @@ class CashRegisterController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
-                
+
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -110,7 +111,7 @@ class CashRegisterController extends Controller
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
-   
+
             ]);
         }catch (Exception $e){
             DB::rollBack();
@@ -139,7 +140,7 @@ class CashRegisterController extends Controller
              return response()->json([
                  'status' => 200,
                  'message' => "Exitoso cashRegister delete",
- 
+
              ]);
          }catch (Exception $e){
              DB::rollBack();
@@ -150,6 +151,6 @@ class CashRegisterController extends Controller
              ],500);
          }
      }
-    
-    
+
+
 }
