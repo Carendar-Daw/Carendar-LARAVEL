@@ -43,7 +43,7 @@ class TransactionController extends Controller
             $app_id = $request->get('app_id');
             $cus_id = $request->get('cus_id');
             $tra_total = $request->get('tra_total');
-            $tra_received = $request->get('tra_recieved');
+            $tra_received = $request->get('tra_received');
             $transaction = new Transaction;
 
             $transaction = $transaction->create([
