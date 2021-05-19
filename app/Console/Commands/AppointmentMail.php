@@ -8,21 +8,21 @@ use App\Http\Controllers\AppointmentController;
 
 class AppointmentMail extends Command
 {
-    /
+    /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'Mail:Appointment';
 
-    /
+    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Sends an email when you have an appointment that day';
 
-    /
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -32,7 +32,7 @@ class AppointmentMail extends Command
         parent::construct();
     }
 
-    /
+    /**
      * Execute the console command.
      *
      * @return int
@@ -51,4 +51,3 @@ class AppointmentMail extends Command
         $this->info('Word of the Day sent to All Users');
     }
     }
-}
