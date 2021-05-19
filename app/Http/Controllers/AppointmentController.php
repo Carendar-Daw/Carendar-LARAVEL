@@ -40,7 +40,7 @@ class AppointmentController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -66,11 +66,42 @@ class AppointmentController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function indexAppointmentCash(Request $request)
+    {
+        try {
+            $sal_id = $request->get('sal_id');
+            $appointment = DB::table('appointments')
+                ->select('*')
+                ->join('customers','appointments.cus_id','=','customers.cus_id')
+                ->join('services__by__appointments','appointments.app_id','=','services__by__appointments.app_id')
+                ->join('services', 'services.ser_id','=','services__by__appointments.ser_id')
+                ->where('appointments.sal_id',$sal_id)
+                ->get();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'appointments' => $appointment,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+            ],500);
+        }
 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -86,6 +117,8 @@ class AppointmentController extends Controller
             $app_date=$request->get('app_date');
             $app_state=$request->get('app_state');
             $cus_id=$request->get('cus_id');
+            $app_color=$request->get('app_color');
+
 
             $app_services = $request->get('app_services');
 
@@ -102,13 +135,14 @@ class AppointmentController extends Controller
                 'app_date'=>$app_date,
                 'app_state'=>$app_state,
                 'cus_id'=>$cus_id,
-                'sal_id' => $sal_id
+                'sal_id' => $sal_id,
+                'app_color'=>$app_color
                 ]);
 
             foreach ($app_services as $service){
                 $services_by_appointments->create([
                     'app_id' => $appointment->app_id,
-                    'ser_id' => $service['key']
+                    'ser_id' => $service
                 ]);
             }
 
@@ -125,7 +159,7 @@ class AppointmentController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
 
@@ -140,10 +174,38 @@ class AppointmentController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            $app_date=$request->get('app_date');
+            $app_state=$request->get('app_state');
+            $cus_id=$request->get('cus_id');
+            $app_color=$request->get('app_color');
+
+            $app_services = $request->get('app_services');
+
             $sal_id = $request->get('sal_id');
             $appointment = Appointment::where('sal_id', $sal_id)->where('app_id',$app_id)->first();
-            $appointment->sal_id = $sal_id;
-            $appointment->update(array_merge($request->all(), ['sal_id' => $sal_id]));
+            $appointment->update([
+                'sal_id' => $sal_id,
+                'app_date'=>$app_date,
+                'app_state'=>$app_state,
+                'cus_id'=>$cus_id,
+                'app_color'=>$app_color
+            ]);
+
+            // Services_By_Appointment::where('app_id',$app_id);
+            $services_by_appointments = new Services_By_Appointment();
+
+            $sba = Services_By_Appointment::where('app_id',$app_id);
+            $sba->delete();
+
+                foreach ($app_services as $service){
+                    $services_by_appointments->create([
+                        'app_id' => $appointment->app_id,
+                        'ser_id' => $service
+                    ]);
+                }
+
+
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -153,10 +215,10 @@ class AppointmentController extends Controller
         }catch (Exception $e){
             DB::rollBack();
             return response()->json([
-                'status' => 500,
-                'message' => "Error",
+                'status' => $app_id,
+                'message' => $e->getLine(),
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
     /**
@@ -185,7 +247,7 @@ class AppointmentController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 }

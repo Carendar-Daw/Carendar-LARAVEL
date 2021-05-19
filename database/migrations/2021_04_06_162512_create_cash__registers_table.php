@@ -18,7 +18,6 @@ class CreateCashRegistersTable extends Migration
             $table->foreign('sal_id')->references('sal_id')->on('saloons');
             $table->integer('cas_open');
             $table->integer('cas_current');
-            $table->date('cas_date');
             $table->string('cas_state', 20);
             $table->timestamps();
         });

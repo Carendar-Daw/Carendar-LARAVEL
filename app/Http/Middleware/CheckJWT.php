@@ -39,7 +39,7 @@ class CheckJWT
         try {
             $tokenInfo = $auth0->decodeJWT($accessToken);
             $user = $this->userRepository->getUserByDecodedJWT($tokenInfo);
-            $existsSaloon = $Saloon->checkIfSaloonExists($user->sub, $request);
+            $existsSaloon = $Saloon->checkIfSaloonExistsAuth($user->sub, $request);
              if($existsSaloon){
              $request->attributes->add(['sal_id' => $existsSaloon->sal_id]);
              }
