@@ -264,7 +264,7 @@ class AppointmentController extends Controller
         $sal_id = $request->get('sal_id');
 
         $appointment = DB::table('appointments')
-        ->select('appointments.','cus_name')
+        ->select('appointments.*','cus_name')
         ->join('customers','appointments.cus_id','=','customers.cus_id')
         ->where('appointments.sal_id',$sal_id)
         ->whereBetween('appointments.app_date',[$today,$tomorrow])
@@ -277,7 +277,7 @@ class AppointmentController extends Controller
 
         return $arrayCustomers;
     } catch (Exception $e) {
-   return "f bro";
+   return $e;
     }
 }
 }
