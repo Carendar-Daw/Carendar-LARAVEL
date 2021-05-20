@@ -263,7 +263,7 @@ class AppointmentController extends Controller
         $tomorrow = date ( 'Y-m-j' , $tomorrow ); 
         $sal_id = $request->get('sal_id');
 
-        $appointment = DB::table('appointments')
+        $appointments = DB::table('appointments')
         ->select('appointments.*','cus_name')
         ->join('customers','appointments.cus_id','=','customers.cus_id')
         ->where('appointments.sal_id',$sal_id)
@@ -271,11 +271,10 @@ class AppointmentController extends Controller
         ->get();
 
         $arrayCustomers = null;
-        foreach ($appointment as $a) {
-            $arrayCustomers[]= $a->cus_id;
-            }
-
-        return $arrayCustomers;
+        foreach ($appointments as $a) {
+            $arrayCustomers[]= Customer::where('cus_id',$a->cus_id)->first();
+            }     
+        return array_unique ($arrayCustomers);
     } catch (Exception $e) {
    return $e;
     }
