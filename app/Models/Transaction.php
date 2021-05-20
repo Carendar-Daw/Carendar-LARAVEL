@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Stock_By_Services_Appointment extends Model
+class Transaction extends Model
 {
+    protected $primaryKey = 'tra_id';
     use HasFactory;
+    protected $guarded = [];
 }

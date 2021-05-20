@@ -31,7 +31,7 @@ class CustomerController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
 
     }
@@ -42,11 +42,10 @@ class CustomerController extends Controller
      * @param $cus_id
      * @return JsonResponse
      */
-    public function show(Request $request, $cus_id)
+    public function show($cus_id)
     {
         try {
-            $sal_id = $request->get('sal_id');
-            $customer = Customer::where('sal_id', $sal_id)->where('cus_id',$cus_id)->first();
+            $customer = Customer::where('cus_id',$cus_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -57,7 +56,7 @@ class CustomerController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 //https://eu.ui-avatars.com/api/?name=Alvaro+Arcal&background=0D8ABC&color=fff
@@ -109,7 +108,7 @@ class CustomerController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
 
@@ -149,7 +148,7 @@ class CustomerController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
     }
      public function destroy(Request $request, $cus_id)
@@ -173,7 +172,7 @@ class CustomerController extends Controller
                     'data' => [
                         'error' => $e->getMessage(),
                     ]
-                ]);
+                ],500);
             }
         }
 }

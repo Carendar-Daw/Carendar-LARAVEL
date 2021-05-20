@@ -58,7 +58,7 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error at creating services",
                 'error' => $e->getMessage()
-            ]);
+            ],500);
         }
 
     }
@@ -106,11 +106,10 @@ class ServicesController extends Controller
      *
      * @return JsonResponse
      */
-    public function indexService($sal_id)
+   /* public function indexService($ser_id)
     {
         try {
-            $sal_id = $request->get('sal_id');
-            $services = Services::all()->where('sal_id',$sal_id);
+            $services = Services::where('ser_id',$ser_id)->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -123,10 +122,10 @@ class ServicesController extends Controller
                 'message' => "Error",
                 'error' => $e->getMessage(),
 
-            ]);
+            ],500);
         }
 
-    }
+    }*/
     /**
      * Display a listing of the resource.
      *
@@ -148,7 +147,7 @@ class ServicesController extends Controller
                 'message' => "Error",
                 'error' => $e->getMessage(),
 
-            ]);
+            ],500);
         }
 
     }
@@ -172,7 +171,7 @@ class ServicesController extends Controller
                 return response()->json([
                       'status' => 400,
                       'message' => "No tienes este servicio",
-                      ]);
+                      ],400);
             }
 
             DB::commit();
@@ -186,7 +185,7 @@ class ServicesController extends Controller
                 'status' => 500,
                 'message' => "Error",
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 }

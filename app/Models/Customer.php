@@ -30,4 +30,5 @@ class Customer extends Model
     public static function deleteImagen($actual){
            Storage::disk('public')->delete("images/avatar/$actual");
     }
+
 }

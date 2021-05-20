@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMailable;
+use App\Models\Services_By_Appointment;
+use App\Models\Stock;
+use App\Models\Customer;
 use App\Models\Saloon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -28,18 +31,21 @@ class SaloonController extends Controller
         ]);
     }
 
-    public function checkIfSaloonExists($id_auth, $request)
+    public function checkIfSaloonExistsAuth($id_auth, $request)
         {
-
             if(Saloon::where('auth0_id', $id_auth)->exists()){
               $saloons = Saloon::where('auth0_id', $id_auth)->first();
               return $saloons;
+            }else if(Saloon::where('sal_email', $request->sal_email)->exists()){
+             $saloons = Saloon::where('sal_email', $request->sal_email)->first();
+             $saloons->auth0_id = $id_auth;
+             $saloons->save();
+             return $saloons;
             }else{
                $saloon = new Saloon;
                $saloon = $saloon->create($request->all());
                return $saloon;
             }
-
         }
 
     /**
@@ -51,9 +57,9 @@ class SaloonController extends Controller
     {
         try {
             DB::beginTransaction();
-
-           if (Saloon::where('auth0_id', $request->auth0_id)->exists()) {
-            $saloons = Saloon::where('auth0_id', $request->auth0_id)->first();
+            $sal_id = $request->get('sal_id');
+           if (Saloon::where('sal_id', $sal_id)->exists()) {
+            $saloons = Saloon::where('sal_id', $sal_id)->first();
             return response()->json([
                 'status' => 400,
                 'message' => "Ya hay un saloon con estas credenciales",
@@ -77,7 +83,7 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage()
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -103,16 +109,14 @@ class SaloonController extends Controller
                 response()->json([
                     'status' => 200,
                     'message' => "Exitoso",
-                    'data' => [
-                        'saloon' => $saloon,
-                    ]
+                    'saloon' => $saloon,
                 ])
                 :
                 response()->json([
                     'status' => 500,
                     'message' => "No se encontró un salón con id: " . $sal_id,
                     'data' => []
-                ]);
+                ],500);
 
         } catch (Exception $e) {
             return response()->json([
@@ -121,7 +125,7 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
 
     }
@@ -159,10 +163,52 @@ class SaloonController extends Controller
                 'data' => [
                     'error' => $e->getMessage(),
                 ]
-            ]);
+            ],500);
         }
+    }
+
+      public function statistics(Request $request) {
 
 
+        try {
+            DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
+            $servicesByAppointment = Services_By_Appointment::select('services.ser_id', 'services.ser_description', DB::raw('COUNT(services__by__appointments.ser_id) as numTotal'))
+                                                              ->join('services', 'services.ser_id', '=', 'services__by__appointments.ser_id')
+                                                              ->where('services.sal_id', '=', $sal_id)
+                                                              ->groupBy('services.ser_id')
+                                                              ->whereBetween('services__by__appointments.created_at', [$request->minTime, $request->maxTime])
+                                                              ->orderBy('numTotal', 'desc')
+                                                              ->limit(5)
+                                                              ->get();
+
+            $customer = Customer::select(DB::raw('COUNT(customers.cus_id) as numTotal'))
+                                                                        ->where('customers.sal_id', '=', $sal_id)
+                                                                        ->whereBetween('customers.created_at', [$request->minTime, $request->maxTime])
+                                                                        ->first();
+            $products = Stock::select(DB::raw('SUM(stocks.sto_pvp) as Total'))
+                                                                        ->where('stocks.sal_id', '=', $sal_id)
+                                                                        ->whereBetween('stocks.created_at', [$request->minTime, $request->maxTime])
+                                                                        ->first();
+
+             DB::commit();
+             return [
+                    'status' => 200,
+                    'message' => $request->body,
+                    'servicesPie' => $servicesByAppointment,
+                    'customer' => $customer,
+                    'products' => $products,
+             ];
+        }catch (Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => "Error",
+                'data' => [
+                    'error' => $e->getMessage(),
+                ]
+        ],500);
+      }
     }
 
 
