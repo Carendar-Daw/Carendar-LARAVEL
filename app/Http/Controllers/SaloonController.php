@@ -87,11 +87,11 @@ class SaloonController extends Controller
         }
 
     }
-    public function sendWelcomeEmail()
+    /*public function sendWelcomeEmail()
     {
         $mail = new WelcomeMailable;
         Mail::to('alvaroarpal@gmail.com')->send($mail);
-    }
+    }*/
 
     /**
      * Display the specified resource.
