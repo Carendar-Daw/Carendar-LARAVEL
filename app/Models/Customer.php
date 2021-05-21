@@ -13,6 +13,10 @@ class Customer extends Model
     protected $primaryKey = 'cus_id';
     use HasFactory;
     protected $guarded = [];
+    protected $cus_id = 'cus_id';
+    protected $cus_email = 'cus_email';
+
+
 
     public static function setImage($photo, $customerEmail){
         if($photo){
