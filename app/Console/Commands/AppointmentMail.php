@@ -7,7 +7,7 @@ use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Appointment;
 use App\Models\Customer;
-use Illuminate\Support\Facades\DB;
+
 
 class AppointmentMail extends Command
 {
@@ -32,38 +32,33 @@ class AppointmentMail extends Command
      */
     public function construct()
     {
-        parent::construct();
+        //parent::construct();
     }
 
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
     public function handle()
     {
-            $today = date('Y-m-d');
-            $today .= " 00:00:00";
-            $tomorrow = strtotime ( '+1 day' , strtotime ( $today ) ) ;
-            $tomorrow = date ( 'Y-m-j' , $tomorrow); 
-            $tomorrow .= " 00:00:00";
-            $appointments = DB::table("appointments")->where('app_date','>', $today);
-            //$arrayCustomers = null;
-            Storage::disk('local')->append('archivo.txt', $appointments);
-            Storage::disk('local')->append('variables.txt', [$today, $tomorrow]);
-            foreach ($appointments as $a) {
-                //$arrayCustomers= Customer::where('cus_id',$a->cus_id);
-                
-                }    
-                
- 
+        $today = date('Y-m-d');
+        $tomorrow = strtotime('+1 day', strtotime($today));
+        $tomorrow = date('Y-m-j', $tomorrow);
+        $appointments = Appointment::whereBetween('app_date', [$today, $tomorrow])->get();
+        $arrayCustomers = null;
+        foreach ($appointments as $a) {
+            $arrayCustomers[] = Customer::where('cus_id', $a->cus_id)->get();
         }
+        $arrayMails = null;
+        foreach ($arrayCustomers as $a) {
+            //$arrayMails[] = $a->cus_email;
+           Storage::disk('local')->append('archivo.txt', $a->cus_email);
         }
-    
-                
         
+        AppointmentController::sendAppointmentEmail($arrayMails);
+    }
+
     
-        
-    
-    
+    }
 
