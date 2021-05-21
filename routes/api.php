@@ -58,7 +58,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::get('language', [LanguageController::class, 'index']);
     Route::get('language/{sal_id}', [LanguageController::class, 'indexLanguage']);
     Route::post('language', [LanguageController::class, 'create']);
-    Route::put('language/{sal_id}', [LanguageController::class, 'update']);
+    Route::put('language', [LanguageController::class, 'update']);
     Route::delete('language/{sal_id}', [LanguageController::class, 'destroy']);
 
     //CashRegister Endpoints

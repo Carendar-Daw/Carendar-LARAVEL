@@ -28,9 +28,9 @@ class ToursController extends Controller
             ]);
         } else {
         $notDone = 0;
-            $tours = new Tours;
-            $tours->sal_id = $sal_id;
-            $theTour = $tours->save();
+        $tours = new Tours;
+        $tours->sal_id = $sal_id;
+        $theTour = $tours->save();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",

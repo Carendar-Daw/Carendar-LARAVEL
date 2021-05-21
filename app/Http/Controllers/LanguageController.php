@@ -14,16 +14,30 @@ class LanguageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try{
-        $language = Language::all();
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'language' => $language,
-  
-        ]);  
+        $sal_id = $request->get('sal_id');
+        if(Language::where('sal_id', $sal_id)->exists()){
+            $language = Language::where('sal_id', $sal_id)->first();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'language' => $language->lan_preference,
+                ]);
+        }else{
+            $defaultLanguage = 'en';
+            $language = new Language;
+            $language->sal_id = $sal_id;
+            $language->lan_preference = 'es';
+            $language->save();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'language' => $defaultLanguage,
+            ]);
+        }
+
     } catch (Exception $e) {
         return response()->json([
             'status' => 500,
