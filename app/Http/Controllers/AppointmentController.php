@@ -150,6 +150,7 @@ class AppointmentController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
+                'appointment' => $appointment,
             ]);
         } catch (Exception $e) {
             DB::rollBack();
