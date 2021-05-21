@@ -50,13 +50,7 @@ class AppointmentMail extends Command
         foreach ($appointments as $a) {
             $arrayCustomers[] = Customer::where('cus_id', $a->cus_id)->get();
         }
-        $arrayMails = null;
-        foreach ($arrayCustomers as $a) {
-            //$arrayMails[] = $a->cus_email;
-           Storage::disk('local')->append('archivo.txt', $a->cus_email);
-        }
-        
-        AppointmentController::sendAppointmentEmail($arrayMails);
+        AppointmentController::sendAppointmentEmail(array_unique($arrayCustomers));
     }
 
     

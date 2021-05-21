@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Customer;
+use App\Models\Saloon;
 use App\Models\Services_By_Appointment;
 use Exception;
 use Illuminate\Support\Facades\Mail;
@@ -257,12 +258,12 @@ class AppointmentController extends Controller
      * @return void
      * @param
      */
-    public static function sendAppointmentEmail($arrayMails)
+    public static function sendAppointmentEmail($cus)
     {
-
-        $mail = new WelcomeMailable;
-        foreach ($arrayMails as $m) {
-            Mail::to($m)->send($mail);
+        foreach ($cus as $c) {
+            $saloon = Saloon::where('sal_id', $c[0]->sal_id)->first();
+            $mail = new WelcomeMailable($c[0], $saloon);
+            Mail::to($c[0]->cus_email)->send($mail);
         }
     }
 }
