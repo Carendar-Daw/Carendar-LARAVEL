@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\AppointmentController;
-
+use Illuminate\Support\Facades\Storage;
+use App\Models\Appointment;
+use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentMail extends Command
 {
@@ -39,15 +42,28 @@ class AppointmentMail extends Command
      */
     public function handle()
     {
-        $customers = getCustomerByAppointmentsByDate();
-        foreach ($customers as $c) {
-            Mail::raw("{$key} -> {$value}", function ($mail) use ($user) {
-                $mail->from('carendar.daw@gmail.com');
-                $mail->to($user->email)
-                    ->subject('Word of the Day');
-            });
+            $today = date('Y-m-d');
+            $today .= " 00:00:00";
+            $tomorrow = strtotime ( '+1 day' , strtotime ( $today ) ) ;
+            $tomorrow = date ( 'Y-m-j' , $tomorrow); 
+            $tomorrow .= " 00:00:00";
+            $appointments = DB::table("appointments")->where('app_date','>', $today);
+            //$arrayCustomers = null;
+            Storage::disk('local')->append('archivo.txt', $appointments);
+            Storage::disk('local')->append('variables.txt', [$today, $tomorrow]);
+            foreach ($appointments as $a) {
+                //$arrayCustomers= Customer::where('cus_id',$a->cus_id);
+                
+                }    
+                
+ 
         }
+        }
+    
+                
+        
+    
+        
+    
+    
 
-        $this->info('Word of the Day sent to All Users');
-    }
-    }

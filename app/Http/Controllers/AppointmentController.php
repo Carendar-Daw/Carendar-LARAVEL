@@ -255,21 +255,14 @@ class AppointmentController extends Controller
       * @param Request $request
      * @return JsonResponse
      */
-    public function getCustomerByAppointmentsByDate(Request $request)
+    public function getCustomerByAppointmentsByDate()
     {
     try {
         $today = date('Y-m-d');
         $tomorrow = strtotime ( '+1 day' , strtotime ( $today ) ) ;
         $tomorrow = date ( 'Y-m-j' , $tomorrow ); 
-        $sal_id = $request->get('sal_id');
 
-        $appointments = DB::table('appointments')
-        ->select('appointments.*','cus_name')
-        ->join('customers','appointments.cus_id','=','customers.cus_id')
-        ->where('appointments.sal_id',$sal_id)
-        ->whereBetween('appointments.app_date',[$today,$tomorrow])
-        ->get();
-
+        $appointments = Appointment::all();
         $arrayCustomers = null;
         foreach ($appointments as $a) {
             $arrayCustomers[]= Customer::where('cus_id',$a->cus_id)->first();
