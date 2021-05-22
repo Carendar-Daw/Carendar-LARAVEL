@@ -21,11 +21,20 @@ class CashRegisterController extends Controller
         try {
             $sal_id = $request->get('sal_id');
             $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
+            if($cashRegister->cas_state == 'close'){
+            return response()->json([
+                    'status' => 200,
+                    'message' => "Caja ya cerrada",
+                    'cashRegister' => null,
+            ]);
+            }else{
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
             ]);
+            }
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
@@ -45,17 +54,17 @@ class CashRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
             if (Cash_Register::where('sal_id', $request->sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->exists()) {
                 return response()->json([
                     'status' => 400,
                     'message' => "Ya hay una caja creada",
                 ]);
-               }else{
-
+            }else{
                 $cashRegister = new Cash_Register;
-                $cashRegister = $cashRegister->create($request->all());
+                $cashRegister->create((array_merge($request->all(), ['sal_id' => $sal_id])));
 
-               }
+            }
             DB::commit();
             return response()->json([
                 'status' => 200,
@@ -100,10 +109,11 @@ class CashRegisterController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
+             $sal_id = $request->get('sal_id');
             $cashRegister = Cash_Register::find($sal_id);
             $cashRegister->update($request->all());
             DB::commit();
