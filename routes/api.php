@@ -64,7 +64,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     //CashRegister Endpoints
     Route::get('cashregister', [CashRegisterController::class, 'index']);
-    Route::get('cashregister/{sal_id}', [CashRegisterController::class, 'IndexCashRegister']);
+    Route::get('cashregisterClosed', [CashRegisterController::class, 'IndexCashRegister']);
     Route::post('cashregister', [CashRegisterController::class, 'create']);
     Route::put('cashregister', [CashRegisterController::class, 'update']);
     Route::delete('cashregister/{sal_id}', [CashRegisterController::class, 'destroy']);

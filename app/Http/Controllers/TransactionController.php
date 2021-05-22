@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
-use App\Models\Cash_Register;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,48 +12,14 @@ class TransactionController extends Controller
     public function list(Request $request)
     {
         try {
-         $sal_id = $request->get('sal_id');
-        if(Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->exists()){
-         $cashRegister = Transaction::where('sal_id',$sal_id)->first();
-         $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
-         $cashRegister->cas_current = $request->get('tra_total');
-         $cashRegister->update();
-                    return response()->json([
-                        'status' => 200,
-                        'message' => "Exitoso",
-                        'cashRegister' => $cashRegister,
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Transaction::where('sal_id',$sal_id)->first();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'cashRegister' => $cashRegister,
 
-         ]);
-        }else{
-         try {
-                    DB::beginTransaction();
-                    if (Cash_Register::where('sal_id', $request->sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->exists()) {
-                        return response()->json([
-                            'status' => 400,
-                            'message' => "Ya hay una caja creada",
-                        ]);
-
-                        $cashRegister = new Cash_Register;
-                        $cashRegister = $cashRegister->create($request->all());
-
-                       }
-                    DB::commit();
-                    return response()->json([
-                        'status' => 200,
-                        'message' => "Exitoso",
-                        'cashRegister' => $cashRegister,
-
-                    ]);
-
-                    return response()->json([
-                        'status' => 500,
-                        'message' => "Error at creating cashRegister",
-                        'error' => $e->getMessage()
-
-                    ],500);
-        }
-
-
+            ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
