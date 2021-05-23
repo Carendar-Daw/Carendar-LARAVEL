@@ -19,7 +19,7 @@ class CreateSaloonsTable extends Migration
             $table->string('sal_location', 150)->nullable();
             $table->string('sal_email', 128)->unique();
             $table->integer('sal_phone')->nullable();
-            $table->string('auth0_id', 255)->unique();
+            $table->string('auth0_id',50)->unique();
             $table->string('sal_brand', 255)->nullable();
             $table->timestamps();
         });
