@@ -38,6 +38,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::get('appointment/cash', [AppointmentController::class, 'indexAppointmentCash']);
     Route::post('appointment', [AppointmentController::class, 'create']);
     Route::put('appointment/{app_id}', [AppointmentController::class, 'update']);
+    Route::put('appointmentState/{app_id}', [AppointmentController::class, 'updateState']);
     Route::delete('appointment/{app_id}', [AppointmentController::class, 'delete']);
 
     // Services Endpoints

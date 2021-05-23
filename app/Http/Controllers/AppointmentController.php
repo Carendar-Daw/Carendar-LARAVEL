@@ -209,6 +209,31 @@ class AppointmentController extends Controller
             ], 500);
         }
     }
+
+     public function updateState(Request $request, $app_id)
+        {
+            try {
+                DB::beginTransaction();
+
+                $sal_id = $request->get('sal_id');
+                $appointment = Appointment::where('sal_id', $sal_id)->where('app_id', $app_id)->first();
+                $appointment->update($request->all());
+
+                DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Exitoso",
+                    'appointment' => $appointment,
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => $app_id,
+                    'message' => $e->getLine(),
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
     /**
      * Update the specified resource in storage.
      *
