@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\WelcomeMailable;
 use App\Models\Services_By_Appointment;
+use App\Models\Cash_Register;
 use App\Models\Stock;
 use App\Models\Customer;
 use App\Models\Saloon;
@@ -191,6 +192,10 @@ class SaloonController extends Controller
                                                                         ->whereBetween('stocks.created_at', [$request->minTime, $request->maxTime])
                                                                         ->first();
 
+            $earningsByMonth = Cash_Register::select(DB::raw('SUM(cas_current) as earning, MonthName(created_at) as month'))
+                                                                          ->groupBy(DB::raw("MONTH(created_at)"))
+                                                                          ->get();
+
              DB::commit();
              return [
                     'status' => 200,
@@ -198,6 +203,7 @@ class SaloonController extends Controller
                     'servicesPie' => $servicesByAppointment,
                     'customer' => $customer,
                     'products' => $products,
+                    'earningsByMonth' => $earningsByMonth
              ];
         }catch (Exception $e){
             DB::rollBack();
