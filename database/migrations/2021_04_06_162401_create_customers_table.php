@@ -15,7 +15,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('cus_id');
-            $table->string('cus_email', 30)->unique();
+            $table->string('cus_email', 128)->unique();
             $table->string('cus_color_preference', 25)->default('#8265a7');
             $table->string('cus_name', 20);
             $table->string('cus_photo')->default('defaultAvatar.jpg');
