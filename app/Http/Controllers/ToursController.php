@@ -27,15 +27,17 @@ class ToursController extends Controller
                 'tours' => $theTour,
             ]);
         } else {
-            $tours = new Tours;
-            $tours->sal_id = $sal_id;
-            $theTour = $tours->save();
+        $notDone = 0;
+        $tours = new Tours;
+        $tours->sal_id = $sal_id;
+        $theTour = $tours->save();
+            return response()->json([
+                'status' => 200,
+                'message' => "Exitoso",
+                'tours' => $notDone,
+            ]);
         }
-        return response()->json([
-            'status' => 200,
-            'message' => "Exitoso",
-            'tours' => $theTour,
-        ]);
+
     }
     /**
      * Show the form for creating a new resource.

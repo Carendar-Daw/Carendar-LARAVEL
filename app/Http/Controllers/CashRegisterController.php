@@ -21,11 +21,20 @@ class CashRegisterController extends Controller
         try {
             $sal_id = $request->get('sal_id');
             $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
+            if($cashRegister && $cashRegister->cas_state == 'close'){
+            return response()->json([
+                    'status' => 200,
+                    'message' => "Caja ya cerrada",
+                    'cashRegister' => null,
+            ]);
+            }else{
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
             ]);
+            }
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
@@ -45,24 +54,24 @@ class CashRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
+            $sal_id = $request->get('sal_id');
             if (Cash_Register::where('sal_id', $request->sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->exists()) {
                 return response()->json([
                     'status' => 400,
                     'message' => "Ya hay una caja creada",
                 ]);
-               }else{
+            }else{
+               $cashRegister = new Cash_Register;
+               $cashRegister = $cashRegister->create((array_merge($request->all(), ['sal_id' => $sal_id])));
 
-                $cashRegister = new Cash_Register;
-                $cashRegister = $cashRegister->create($request->all());
-
-               }
+            }
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
                 'cashRegister' => $cashRegister,
-
             ]);
+
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -74,10 +83,11 @@ class CashRegisterController extends Controller
         }
     }
 
-    public function indexCashRegister($sal_id)
+    public function indexCashRegister(Request $request)
     {
         try {
-            $cashRegister = Cash_Register::where('sal_id',$sal_id)->first();
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
             return response()->json([
                 'status' => 200,
                 'message' => "Exitoso",
@@ -100,12 +110,21 @@ class CashRegisterController extends Controller
      * @param $sal_id
      * @return JsonResponse
      */
-    public function update(Request $request, $sal_id)
+    public function update(Request $request)
     {
         try {
             DB::beginTransaction();
-            $cashRegister = Cash_Register::find($sal_id);
-            $cashRegister->update($request->all());
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
+
+            if($request->get('cas_current')){
+                $priceToModify =  $cashRegister->cas_current + $request->get('cas_current');
+                $cashRegister->update(array_merge($request->all(), ['cas_current' => $priceToModify]));
+            }else{
+                $cashRegister->update($request->all());
+            }
+
+
             DB::commit();
             return response()->json([
                 'status' => 200,

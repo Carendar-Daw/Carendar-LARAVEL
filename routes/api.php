@@ -33,6 +33,7 @@ Route::group(['middleware' => 'jwt:api'], function () {
 
     // Appointment Endpoints
     Route::get('appointment/saloon', [AppointmentController::class, 'index']);
+    Route::get('appointment/date', [AppointmentController::class, 'getCustomerByAppointmentsByDate']);
     Route::get('appointment/customer/{cus_id}', [AppointmentController::class, 'indexAppointmentByCustomer']);
     Route::get('appointment/cash', [AppointmentController::class, 'indexAppointmentCash']);
     Route::post('appointment', [AppointmentController::class, 'create']);
@@ -58,14 +59,14 @@ Route::group(['middleware' => 'jwt:api'], function () {
     Route::get('language', [LanguageController::class, 'index']);
     Route::get('language/{sal_id}', [LanguageController::class, 'indexLanguage']);
     Route::post('language', [LanguageController::class, 'create']);
-    Route::put('language/{sal_id}', [LanguageController::class, 'update']);
+    Route::put('language', [LanguageController::class, 'update']);
     Route::delete('language/{sal_id}', [LanguageController::class, 'destroy']);
 
     //CashRegister Endpoints
     Route::get('cashregister', [CashRegisterController::class, 'index']);
-    Route::get('cashregister/{sal_id}', [CashRegisterController::class, 'IndexCashRegister']);
+    Route::get('cashregisterClosed', [CashRegisterController::class, 'IndexCashRegister']);
     Route::post('cashregister', [CashRegisterController::class, 'create']);
-    Route::put('cashregister/{sal_id}', [CashRegisterController::class, 'update']);
+    Route::put('cashregister', [CashRegisterController::class, 'update']);
     Route::delete('cashregister/{sal_id}', [CashRegisterController::class, 'destroy']);
 
     //Tours Endpoints
