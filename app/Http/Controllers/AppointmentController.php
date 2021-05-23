@@ -176,22 +176,9 @@ class AppointmentController extends Controller
         try {
             DB::beginTransaction();
 
-            $app_date = $request->get('app_date');
-            $app_state = $request->get('app_state');
-            $cus_id = $request->get('cus_id');
-            $app_color = $request->get('app_color');
-
-            $app_services = $request->get('app_services');
-
             $sal_id = $request->get('sal_id');
             $appointment = Appointment::where('sal_id', $sal_id)->where('app_id', $app_id)->first();
-            $appointment->update([
-                'sal_id' => $sal_id,
-                'app_date' => $app_date,
-                'app_state' => $app_state,
-                'cus_id' => $cus_id,
-                'app_color' => $app_color
-            ]);
+            $appointment->update($request->all());
 
             // Services_By_Appointment::where('app_id',$app_id);
             $services_by_appointments = new Services_By_Appointment();

@@ -114,9 +114,17 @@ class CashRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
-             $sal_id = $request->get('sal_id');
-            $cashRegister = Cash_Register::find($sal_id);
-            $cashRegister->update($request->all());
+            $sal_id = $request->get('sal_id');
+            $cashRegister = Cash_Register::where('sal_id', $sal_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->first();
+
+            if($request->get('cas_current')){
+                $priceToModify =  $cashRegister->cas_current + $request->get('cas_current');
+                $cashRegister->update(array_merge($request->all(), ['cas_current' => $priceToModify]));
+            }else{
+                $cashRegister->update($request->all());
+            }
+
+
             DB::commit();
             return response()->json([
                 'status' => 200,
