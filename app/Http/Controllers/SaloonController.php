@@ -193,7 +193,7 @@ class SaloonController extends Controller
                                                                         ->first();
 
             $earningsByMonth = Cash_Register::select(DB::raw('SUM(cas_current) as earning, MonthName(created_at) as month'))
-                                                                          ->where('stocks.sal_id', '=', $sal_id)
+                                                                          ->where('cash__registers.sal_id', '=', $sal_id)
                                                                           ->groupBy(DB::raw("MONTH(created_at)"))
                                                                           ->get();
 
